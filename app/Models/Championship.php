@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Sport;
 
 class Championship extends Model
 {
@@ -18,4 +19,9 @@ class Championship extends Model
         'name',
         'sports_id',
     ];
+
+    public function sport()
+    {
+        return $this->belongsTo(Sport::class,'sports_id');
+    }
 }

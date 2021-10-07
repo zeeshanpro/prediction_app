@@ -14,5 +14,47 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth/login');
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/login_v2', function () {
+    return view('auth/login_v2');
+});
+
+Route::get('/home_v2', function () {
+    return view('home_v2');
+});
+
+Route::resource('admin/user', App\Http\Controllers\Admin\UserController::class, [
+    'names' => [
+        'index' => 'admin.user.index',
+        'store' => 'admin.user.new',
+    ]
+]);
+
+Route::resource('admin/sport', App\Http\Controllers\Admin\SportController::class, [
+    'names' => [
+        'index' => 'admin.sport.index',
+        'store' => 'admin.sport.new',
+    ]
+]);
+
+Route::resource('admin/championship', App\Http\Controllers\Admin\ChampionshipController::class, [
+    'names' => [
+        'index' => 'admin.championship.index',
+        'store' => 'admin.championship.new',
+    ]
+]);
+
+Route::resource('admin/game', App\Http\Controllers\Admin\GameController::class, [
+    'names' => [
+        'index' => 'admin.game.index',
+        'store' => 'admin.game.new',
+        'create' => 'admin.game.create'
+    ]
+]);
+

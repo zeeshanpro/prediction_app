@@ -29,6 +29,14 @@
 
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css')}}">
+	
+	<style>
+		.activeLi{
+			font-weight:bold !important;
+			background-color: rgba(255,255,255,.1) !important;
+			color: #fff !important;
+		}
+	</style>
 </head>
 <body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">
@@ -46,7 +54,7 @@
       <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
     </li>
     <li class="nav-item d-none d-sm-inline-block">
-      <a href="index3.html" class="nav-link">Home</a>
+      <a href="{{ route('home') }}" class="nav-link">Home</a>
     </li>
 
     
@@ -67,7 +75,7 @@
   <!-- Right navbar links -->
   <ul class="navbar-nav ml-auto">
     <!-- Navbar Search -->
-    <li class="nav-item">
+    <!--<li class="nav-item">
       <a class="nav-link" data-widget="navbar-search" href="#" role="button">
         <i class="fas fa-search"></i>
       </a>
@@ -86,7 +94,7 @@
           </div>
         </form>
       </div>
-    </li>
+    </li>-->
 
     <!-- Messages Dropdown Menu -->
     <li class="nav-item dropdown">
@@ -173,7 +181,7 @@
         <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
       </div>
     </li>
-    <li class="nav-item">
+    <!--<li class="nav-item">
       <a class="nav-link" data-widget="fullscreen" href="#" role="button">
         <i class="fas fa-expand-arrows-alt"></i>
       </a>
@@ -182,7 +190,7 @@
       <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
         <i class="fas fa-th-large"></i>
       </a>
-    </li>
+    </li>-->
   </ul>
 </nav>
 <!-- /.navbar -->
@@ -190,7 +198,7 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
-  <a href="index3.html" class="brand-link">
+  <a href="{{ route('home') }}" class="brand-link">
     <img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
     <span class="brand-text font-weight-light">Prediction App</span>
   </a>
@@ -203,12 +211,12 @@
         <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
       </div>
       <div class="info">
-        <a href="#" class="d-block">Alexander Pierce</a>
+        <a href="javascript:void(0)" class="d-block">{{ ucwords(Auth::user()->name) }}</a>
       </div>
     </div>
 
     <!-- SidebarSearch Form -->
-    <div class="form-inline">
+    <!--<div class="form-inline">
       <div class="input-group" data-widget="sidebar-search">
         <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
         <div class="input-group-append">
@@ -217,15 +225,23 @@
           </button>
         </div>
       </div>
-    </div>
+    </div>-->
 
     <!-- Sidebar Menu -->
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <!-- Add icons to the links using the .nav-icon class
              with font-awesome or any other icon font library -->
-        <li class="nav-item">
-          <a href="pages/widgets.html" class="nav-link">
+		<li class="nav-item {{ Request::segment(1) == 'home' ? 'activeLi' : '' }}">
+          <a href="{{ route('home') }}" class="nav-link">
+			<i class="nav-icon fas fa-tachometer-alt"></i>
+            <p>
+              Dashboard
+            </p>
+          </a>
+        </li>
+        <li class="nav-item {{ Request::segment(2) == 'users' ? 'activeLi' : '' }}">
+          <a href="{{ route('users') }}" class="nav-link">
             <i class="nav-icon fas fa-users"></i>
             <p>
               Users
@@ -234,8 +250,8 @@
           </a>
         </li>
 
-        <li class="nav-item">
-          <a href="#" class="nav-link">
+        <li class="nav-item {{ Request::segment(2) == 'sports' ? 'menu-is-opening menu-open' : '' }}">
+          <a href="javascript:void(0)" class="nav-link">
             <i class="nav-icon fas fa-basketball-ball"></i>
             <p>
               Sports
@@ -243,24 +259,24 @@
             </p>
           </a>
           <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="./index.html" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Add Sports</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="./index2.html" class="nav-link">
+            <li class="nav-item {{ Request::segment(2) == 'sports' && Request::segment(3) == '' ? 'activeLi' : '' }}">
+              <a href="{{ route('sports.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>All Sports</p>
+              </a>
+            </li>
+			<li class="nav-item {{ Request::segment(2) == 'sports' && Request::segment(3) == 'create' ? 'activeLi' : '' }}">
+              <a href="{{ route('sports.create') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Sports</p>
               </a>
             </li>
           </ul>
         </li> 
 
 
-        <li class="nav-item">
-          <a href="#" class="nav-link">
+        <li class="nav-item {{ Request::segment(2) == 'championships' ? 'menu-is-opening menu-open' : '' }} ">
+          <a href="javascript:void(0)" class="nav-link">
             <i class="nav-icon fas fa-trophy"></i>
             <p>
               Championships
@@ -268,34 +284,45 @@
             </p>
           </a>
           <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="./index.html" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Add Championship</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="./index2.html" class="nav-link">
+			<li class="nav-item {{ Request::segment(2) == 'championships' && Request::segment(3) == '' ? 'activeLi' : '' }} ">
+              <a href="{{ route('championships.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>All Championships</p>
+              </a>
+            </li>
+            <li class="nav-item {{ Request::segment(2) == 'championships' && Request::segment(3) == 'create' ? 'activeLi' : '' }}">
+              <a href="{{ route('championships.create') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Championship</p>
               </a>
             </li>
           </ul>
         </li> 
 
 
-
-        <li class="nav-item">
-          <a href="pages/widgets.html" class="nav-link">
+		<li class="nav-item {{ Request::segment(2) == 'games' ? 'menu-is-opening menu-open' : '' }} ">
+          <a href="javascript:void(0)" class="nav-link">
             <i class="nav-icon fab fa-steam"></i>
             <p>
-              Add Game
-              <!-- <span class="right badge badge-danger">New</span> -->
+              Games
+              <i class="right fas fa-angle-left"></i>
             </p>
           </a>
-        </li>
-
-
+          <ul class="nav nav-treeview">
+			<li class="nav-item {{ Request::segment(2) == 'games' && Request::segment(3) == '' ? 'activeLi' : '' }}">
+              <a href="{{ route('games.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>All Games</p>
+              </a>
+            </li>
+            <li class="nav-item {{ Request::segment(2) == 'games' && Request::segment(3) == 'create' ? 'activeLi' : '' }}">
+              <a href="{{ route('games.create') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Game</p>
+              </a>
+            </li>
+          </ul>
+        </li> 
 
       </ul>
     </nav>

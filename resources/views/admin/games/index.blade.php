@@ -6,12 +6,12 @@
     <div class="container-fluid">
     <div class="row mb-2">
         <div class="col-sm-6">
-        <h1>Sports</h1>
+        <h1>Games</h1>
         </div>
         <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Sports</li>
+            <li class="breadcrumb-item active">Games</li>
         </ol>
         </div>
     </div>
@@ -23,17 +23,10 @@
  <section class="content">
     <div class="container-fluid">
     <div class="row">
-	
-		@if($message = Session::get('success'))
-			<div class="alert alert-success">
-				<p> {{ $message }} </p>
-			</div>
-		@endif
-		
         <div class="col-12">
         <div class="card">
             <div class="card-header">
-            <h3 class="card-title">Sports</h3>
+            <h3 class="card-title">Games</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -42,25 +35,30 @@
                 <tr>
                 <th>ID</th>
                 <th>Name</th>
+                <th>Sports</th>
+                <th>Championships</th>
                 <th>Created Date</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($sports as $dt)
-                <tr>
-               
-                
-                    <td>{{ $dt->id }}</td>
-                    <td>{{ $dt->name }}</td>
-                    <td>{{ $dt->created_at }}</td>
-                    
-                </tr>
-                @endforeach
+				@if(isset($games) && !empty($games))
+					@foreach($games as $dt)
+					<tr>
+						<td>{{ $dt->id }}</td>
+						<td>{{ $dt->name }}</td>
+						<td>{{ $dt->sport->name }}</td>
+						<td>{{ $dt->sport->name }}</td>
+						<td>{{ $dt->created_at }}</td>
+					</tr>
+					@endforeach
+                @endif
                 </tbody>
                 <tfoot>
                 <tr>
                 <th>ID</th>
                 <th>Name</th>
+                <th>Sports</th>
+				<th>Championships</th>
                 <th>Created Date</th>
                 </tr>
                 </tfoot>

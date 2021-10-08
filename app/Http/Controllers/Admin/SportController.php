@@ -27,7 +27,7 @@ class SportController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.sports.create');
     }
 
     /**
@@ -38,7 +38,14 @@ class SportController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Request()->validate([
+			'name' => 'required'
+		]);
+		
+		$input = $request->all();
+		Sport::create($input);
+		
+		return redirect()->route('sports.index')->with('success','Sport Successfully Created.' );
     }
 
     /**

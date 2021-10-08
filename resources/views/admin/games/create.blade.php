@@ -25,12 +25,6 @@
     <div class="card card-default">
           <div class="card-header">
             <h3 class="card-title">Add Game</h3>
-
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-minus"></i>
-              </button>
-            </div>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
@@ -40,14 +34,22 @@
                   <label>Sports</label>
                   <select class="form-control" style="width: 100%;">
                     <option value="">Select Sports</option>
-                    
+						@if(isset($data['sports']) && !empty($data['sports']))
+							@foreach($data['sports'] as $dt)
+								<option value="{{ $dt->id }}"> {{ $dt->name }}</option>
+							@endforeach
+						@endif
                   </select>
                 </div>
                 <div class="form-group">
                   <label>Championships</label>
                   <select class="form-control" style="width: 100%;">
                     <option value="">Select Championship</option>
-                    
+						@if(isset($data['championships']) && !empty($data['championships']))
+							@foreach($data['championships'] as $dt)
+								<option value="{{ $dt->id }}"> {{ $dt->name }}</option>
+							@endforeach
+						@endif
                   </select>
                 </div>
 

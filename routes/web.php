@@ -35,6 +35,7 @@ Route::group( ['prefix' => 'admin','middleware' => ['auth'] ] , function (){
 	Route::resource('sports',App\Http\Controllers\Admin\SportController::class);
 	Route::resource('championships',App\Http\Controllers\Admin\ChampionshipController::class);
 	Route::resource('games',App\Http\Controllers\Admin\GameController::class);
+	Route::post('championships/getChampionshipBySportID',[App\Http\Controllers\Admin\ChampionshipController::class,'LoadChampionshipListBySportID'])->name('getChampionshipBySportID');
 });
 
 

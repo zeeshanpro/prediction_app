@@ -397,7 +397,36 @@
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('dist/js/pages/dashboard2.js') }} "></script>
 
+<script>
+function allowonlyImg(e)
+{
 
+	var id = e.id;
+	if(id == '')
+		return false;
+	
+	var files = $('#'+id)[0].files[0];
+	if(files)
+	{
+		var filename = files.name;
+		var filesize = files.size;
+		if( filesize <= 2097152 ){
+			var fileNameExt = filename.substr(filename.lastIndexOf('.') + 1).toLowerCase();
+			var validExtensions = ['jpeg','jpg','png','tiff','bmp']; //array of valid extensions
+			if ($.inArray(fileNameExt, validExtensions) == -1)
+			{
+			   alert("Invalid file type");
+			   $("#"+id).val('');
+			   return false;
+			}
+		}else{
+			alert("Your file size should not be greater than 2 MB");
+			$("#"+id).val('');
+			return false;
+		}
+	}
+}
+</script>
 
 @stack('scripts')
 </body>

@@ -94,4 +94,28 @@ class ChampionshipController extends Controller
     {
         //
     }
+	
+	public function LoadChampionshipListBySportID()
+	{
+		$sportID 	= (isset($_POST['sportID']) && !empty($_POST['sportID'])) ? $_POST['sportID'] : false;
+		if(!empty($sportID))
+		{
+			$Filterdata = Championship::where("sports_id",$sportID)
+					->latest('championships.created_at')
+					->get(['championships.*']);
+					
+			$html = '<option value="">Select Championship</option>';
+			if(!empty($Filterdata->toArray()))
+			{
+				$i = 0;
+				foreach($Filterdata as $index => $filter)
+				{
+					$i++;	
+					$html .= '<option value="'.$filter->id.'">'.$filter->name.'</option>';
+				}
+			}
+			return response()->json(array('html'=> $html), 200);
+		}
+	}
+
 }

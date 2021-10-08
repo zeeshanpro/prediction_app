@@ -60,7 +60,7 @@ class GameController extends Controller
 			$team1fileobj				= $request->file('team1Logo');
 			$team1Logo_name 			= $team1fileobj->getClientOriginalName('team1Logo');
 			$team1Logo_extension_name 	= $team1fileobj->getClientOriginalExtension('team1Logo');
-			echo $team1Logo_unique_name 		= time().rand(1000,9999).'.'.$team1Logo_extension_name;
+			$team1Logo_unique_name 		= time().rand(1000,9999).'.'.$team1Logo_extension_name;
 			$destinationPath			= public_path('/uploads/');
 			$team1fileobj->move($destinationPath,$team1Logo_unique_name);
 		}

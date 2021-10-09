@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+.topMargin{
+	margin-top:10px !important;
+}
+</style>
  <!-- Content Header (Page header) -->
  <section class="content-header">
     <div class="container-fluid">
@@ -70,7 +75,7 @@
 						<label>Team Name</label>
 						<input type="text" class="form-control" id="team1" name="team1" placeholder="Enter team name" required >
 						<label>Team Logo</label>
-						<input type="file" class="form-control" id="team1Logo" name="team1Logo" required accept="image/*" onchange="allowonlyImg(this)">
+						<input type="file" class="form-control" id="team1Logo" name="team1Logo" accept="image/*" onchange="allowonlyImg(this)" required>
 					</div>
 					
 					<div class="form-group" id="team2Div" style="display:none">
@@ -99,6 +104,26 @@
 							</div>
 						</div>
 					</div>
+					
+					<hr />
+					
+					<div class="form-group">
+						<label>Questions</label>
+						<div id="questionsDiv">
+							<div class="form-group">
+								<label>Question 1</label>
+								<input type="text" class="form-control"  name="questions[]" placeholder="Enter Question 1" required >
+								<div id="Question_1">
+									<input type="text" class="form-control topMargin"  name="answers[0][]" placeholder="Enter Answer 1" required >
+								</div>
+								<a href="javascript:void(0)" data-Question_no="1" data-Answer_no="2" onclick="addAnswer(this)">Add Answer</a>
+							</div>
+						</div>
+						<a href="javascript:void(0)" data-Question_no="2" id="add_question_btn" onclick="addQuestion(this)">Add Question</a>
+					</div>
+					
+					<hr />
+					
 					<div class="form-group">
 						<button class="btn btn-primary btn-lg" type="submit" id="save-btn" />Save</button>
 					</div>
@@ -174,6 +199,35 @@
 			});
 		}
 
+		function addQuestion(e)
+		{
+			var Question_no = $(e).attr('data-Question_no');
+			var Next_Question_no = parseInt(Question_no) + 1;
+			var Perv_Question_no = parseInt(Question_no) - 1;
+			
+			var QuestionHtml = 
+						'<div class="form-group">'+
+							'<label>Question '+Question_no+'</label>'+
+							'<input type="text" class="form-control"  name="questions[]" placeholder="Enter Question '+Question_no+'" required >'+
+							'<div id="Question_'+Question_no+'">'+
+								'<input type="text" class="form-control topMargin"  name="answers['+Perv_Question_no+'][]" placeholder="Enter Answer 1" required >'+
+							'</div>'+
+							'<a href="javascript:void(0)" data-Question_no="'+Question_no+'" data-Answer_no="2" onclick="addAnswer(this)">Add Answer</a>'+
+						'</div>';
+			$("#questionsDiv").append(QuestionHtml);
+			$(e).attr('data-Question_no',Next_Question_no);
+		}
+		
+		function addAnswer(e)
+		{
+			var Question_no = $(e).attr('data-Question_no');
+			var Answer_no = $(e).attr('data-Answer_no');
+			var Next_Answer_no = parseInt(Answer_no) + 1;
+			var Perv_Question_no = parseInt(Question_no) - 1;
+			
+			$("#Question_"+Question_no).append('<input type="text" class="form-control topMargin" name="answers['+Perv_Question_no+'][]" placeholder="Enter Answer '+Answer_no+'" >');
+			$(e).attr('data-Answer_no',Next_Answer_no);
+		}
         </script>
     @endpush
 @endonce

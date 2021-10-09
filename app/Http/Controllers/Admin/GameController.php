@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Game;
 use App\Models\Sport;
 use App\Models\Championship;
+use App\Models\Question;
+use App\Models\Answer;
 use Carbon\Carbon;
 use Auth;
 
@@ -87,7 +89,38 @@ class GameController extends Controller
 		$data['created_by'] = Auth::user()->id;
 		$data['updated_by'] = Auth::user()->id;
 		
-		Game::create($data);
+		$questions = $data['questions'];
+		$answers = $data['answers'];
+		
+		unset($data['questions']);
+		unset($data['answers']);
+		
+		$gameID = Game::create($data)->id;
+		if(!empty($gameID) && !empty($questions) && !empty($answers))
+		{
+			for($i=0;$i<count($questions);$i++)
+			{
+				$questionData['game_id'] 	= $gameID;
+				$questionData['question'] 	= $questions[$i];
+				$questionData['created_by'] = Auth::user()->id;
+				$questionData['updated_by'] = Auth::user()->id;
+				//dd($questionData);
+				$questionID = Question::create($questionData)->id;
+				if(!empty($questionID) && isset($answers[$i]) && !empty($answers[$i]))
+				{
+					for($k=0;$k<count($answers[$i]);$k++)
+					{
+						$answerData['game_id'] 		= $gameID;
+						$answerData['question_id'] 	= $questionID;
+						$answerData['answer'] 		= $answers[$i][$k];
+						$answerData['created_by'] 	= Auth::user()->id;
+						$answerData['updated_by'] 	= Auth::user()->id;
+						$answerID = Answer::create($answerData)->id;
+					}
+				}
+			}
+		}
+		
 		return redirect()->route('games.index')->with("success","Game Successfully Created.");
     }
 

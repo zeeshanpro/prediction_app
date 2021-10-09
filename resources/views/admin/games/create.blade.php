@@ -110,11 +110,16 @@
 					<div class="form-group">
 						<label>Questions</label>
 						<div id="questionsDiv">
-							<div class="form-group">
-								<label>Question 1</label>
-								<input type="text" class="form-control"  name="questions[]" placeholder="Enter Question 1" required >
+							<div class="form-group" id="QuestionDiv_1">
 								<div id="Question_1">
-									<input type="text" class="form-control topMargin"  name="answers[0][]" placeholder="Enter Answer 1" required >
+									<label>Question 1 <a href="javascript:void(0)" data-id="1" onclick="removeQuestion(this)">Remove Question</a></label> 
+									<input type="text" class="form-control"  name="questions[0]" placeholder="Enter Question 1" required >
+									<div class="input-group topMargin" id="answer_1_1">
+									 <input type="text" class="form-control" name="answers[0][]" placeholder="Enter Answer 1" required >
+									  <div class="input-group-append">
+										<span class="input-group-text"><a href="javascript:void(0)" data-id="1_1" onclick="removeAnswer(this)">Remove Answer</a></span>
+									  </div>
+									</div>
 								</div>
 								<a href="javascript:void(0)" data-Question_no="1" data-Answer_no="2" onclick="addAnswer(this)">Add Answer</a>
 							</div>
@@ -206,11 +211,16 @@
 			var Perv_Question_no = parseInt(Question_no) - 1;
 			
 			var QuestionHtml = 
-						'<div class="form-group">'+
-							'<label>Question '+Question_no+'</label>'+
-							'<input type="text" class="form-control"  name="questions[]" placeholder="Enter Question '+Question_no+'" required >'+
+						'<div class="form-group" id="QuestionDiv_'+Question_no+'">'+
 							'<div id="Question_'+Question_no+'">'+
-								'<input type="text" class="form-control topMargin"  name="answers['+Perv_Question_no+'][]" placeholder="Enter Answer 1" required >'+
+								'<label>Question '+Question_no+' <a href="javascript:void(0)" data-id="'+Question_no+'" onclick="removeQuestion(this)">Remove Question</a></label>'+
+								'<input type="text" class="form-control"  name="questions['+Perv_Question_no+']" placeholder="Enter Question '+Question_no+'" required >'+
+								'<div class="input-group topMargin" id="answer_'+Question_no+'_1">'+
+									'<input type="text" class="form-control"  name="answers['+Perv_Question_no+'][]" placeholder="Enter Answer 1" required >'+
+									'<div class="input-group-append">'+
+										'<span class="input-group-text"><a href="javascript:void(0)" data-id="'+Question_no+'_1" onclick="removeAnswer(this)">Remove Answer</a></span>'+
+									'</div>'+
+								'</div>'+
 							'</div>'+
 							'<a href="javascript:void(0)" data-Question_no="'+Question_no+'" data-Answer_no="2" onclick="addAnswer(this)">Add Answer</a>'+
 						'</div>';
@@ -225,9 +235,30 @@
 			var Next_Answer_no = parseInt(Answer_no) + 1;
 			var Perv_Question_no = parseInt(Question_no) - 1;
 			
-			$("#Question_"+Question_no).append('<input type="text" class="form-control topMargin" name="answers['+Perv_Question_no+'][]" placeholder="Enter Answer '+Answer_no+'" >');
+			var AnswerHtml = 
+							'<div class="input-group topMargin" id="answer_'+Question_no+'_'+Answer_no+'">'+
+								'<input type="text" class="form-control" name="answers['+Perv_Question_no+'][]" placeholder="Enter Answer '+Answer_no+'" required>'+
+								'<div class="input-group-append">'+
+										'<span class="input-group-text"><a href="javascript:void(0)" data-id="'+Question_no+'_'+Answer_no+'" onclick="removeAnswer(this)">Remove Answer</a></span>'+
+								'</div>'+
+							'</div>';
+						
+			$("#Question_"+Question_no).append(AnswerHtml);
 			$(e).attr('data-Answer_no',Next_Answer_no);
 		}
+		
+		function removeAnswer(e)
+		{
+			var answerID = $(e).attr('data-id');
+			$("#answer_"+answerID).remove();
+		}
+		
+		function removeQuestion(e)
+		{
+			var questionID = $(e).attr('data-id');
+			$("#QuestionDiv_"+questionID).remove();
+		}
+		
         </script>
     @endpush
 @endonce

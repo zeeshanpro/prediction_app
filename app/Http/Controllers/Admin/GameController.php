@@ -89,8 +89,8 @@ class GameController extends Controller
 		$data['created_by'] = Auth::user()->id;
 		$data['updated_by'] = Auth::user()->id;
 		
-		$questions = $data['questions'];
-		$answers = $data['answers'];
+		$questions 	= (isset($data['questions'])) ? $data['questions'] : false;
+		$answers 	= (isset($data['answers'])) ? $data['answers'] : false;
 		
 		unset($data['questions']);
 		unset($data['answers']);
@@ -98,24 +98,29 @@ class GameController extends Controller
 		$gameID = Game::create($data)->id;
 		if(!empty($gameID) && !empty($questions) && !empty($answers))
 		{
-			for($i=0;$i<count($questions);$i++)
+			foreach($questions as $i => $question)
 			{
-				$questionData['game_id'] 	= $gameID;
-				$questionData['question'] 	= $questions[$i];
-				$questionData['created_by'] = Auth::user()->id;
-				$questionData['updated_by'] = Auth::user()->id;
-				//dd($questionData);
-				$questionID = Question::create($questionData)->id;
-				if(!empty($questionID) && isset($answers[$i]) && !empty($answers[$i]))
+				if(isset($questions[$i]) && !empty($questions[$i]))
 				{
-					for($k=0;$k<count($answers[$i]);$k++)
+					$questionData['game_id'] 	= $gameID;
+					$questionData['question'] 	= trim($question);
+					$questionData['created_by'] = Auth::user()->id;
+					$questionData['updated_by'] = Auth::user()->id;
+					$questionID = Question::create($questionData)->id;
+					if(!empty($questionID) && isset($answers[$i]) && !empty($answers[$i]))
 					{
-						$answerData['game_id'] 		= $gameID;
-						$answerData['question_id'] 	= $questionID;
-						$answerData['answer'] 		= $answers[$i][$k];
-						$answerData['created_by'] 	= Auth::user()->id;
-						$answerData['updated_by'] 	= Auth::user()->id;
-						$answerID = Answer::create($answerData)->id;
+						for($k=0;$k<count($answers[$i]);$k++)
+						{
+							if(isset($answers[$i][$k]) && !empty($answers[$i][$k]))
+							{
+								$answerData['game_id'] 		= $gameID;
+								$answerData['question_id'] 	= $questionID;
+								$answerData['answer'] 		= trim($answers[$i][$k]);
+								$answerData['created_by'] 	= Auth::user()->id;
+								$answerData['updated_by'] 	= Auth::user()->id;
+								$answerID = Answer::create($answerData)->id;
+							}
+						}
 					}
 				}
 			}

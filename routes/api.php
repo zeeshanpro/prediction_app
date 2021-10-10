@@ -23,10 +23,11 @@ Route::post('register', [RegisterController::class, 'register']);
 Route::post('login', [RegisterController::class, 'login']);
 
 Route::resource('sports', SportController::class);
-Route::resource('championship', ChampionshipController::class);
+Route::resource('championships', ChampionshipController::class);
 Route::resource('games', GameController::class);
 
-Route::get('getChampionshipBySportID/{sport_id}', [App\Http\Controllers\Api\v1\ChampionshipController::class,'getChampionshipBySportID'])->name('getChampionshipBySportID');
+Route::get('getChampionshipBySportID/{sport_id}', [ChampionshipController::class,'getChampionshipBySportID'])->name('getChampionshipBySportID');
+Route::get('getGameByChampionshipID/{championship_id}', [GameController::class,'getGameByChampionshipID'])->name('getGameByChampionshipID');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

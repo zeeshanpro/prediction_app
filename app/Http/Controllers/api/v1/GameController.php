@@ -112,6 +112,19 @@ class GameController extends BaseController
     {
         //
     }
+	
+	public function getGameByChampionshipID($id){
+		
+		try{
+			$games = Game::where('championship_id',$id)->latest('games.created_at')->get();
+			$data['games'] = $games;
+			return $this->sendResponse($data, 'Games found successfully.');
+		}
+        catch (\Throwable $th) {
+            return response()->json(['success' => false, 'message' => 'Game Not found.', 'errors' => $th->getMessage()]);
+        }
+		
+    }
 
 }
 

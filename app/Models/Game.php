@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Sport;
 use App\Models\Championship;
+use App\Models\Question;
+use App\Models\Answer;
 
 class Game extends Model
 {
@@ -39,5 +41,14 @@ class Game extends Model
     public function championships(){
         return $this->belongsTo(Championship::class,'championship_id');    
     }
+	
+	public function questions(){
+        return $this->hasMany(Question::class,'game_id');    
+    }
+	
+	public function answers(){
+        return $this->hasMany(Answer::class,'game_id');    
+    }
+	
 }
 

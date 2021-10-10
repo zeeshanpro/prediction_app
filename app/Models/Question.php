@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Answer;
+use App\Models\Game;
 
 class Question extends Model
 {
@@ -20,5 +22,15 @@ class Question extends Model
         'created_by',
         'updated_by',
     ];
+	
+	public function game()
+    {
+        return $this->belongsTo(Game::class,'game_id');
+    }
+	
+	public function answers(){
+        return $this->hasMany(Answer::class,'question_id');    
+    }
+	
 }
 

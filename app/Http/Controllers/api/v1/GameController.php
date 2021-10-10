@@ -6,9 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\api\v1\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\Models\Sport;
+use App\Models\Championship;
+use App\Models\Game;
+use App\Models\Question;
+use App\Models\Answer;
 use Throwable;
 
-class SportController extends BaseController
+class GameController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -18,15 +22,19 @@ class SportController extends BaseController
     public function index()
     {
 		try{
-			$sports = Sport::all();
-			if($sports->isEmpty()){
-				return $this->sendError('No sports found');
+			$games = Game::all();
+			if($games->isEmpty()){
+				return $this->sendError('No games found');
 			}
-			return $this->sendResponse($sports, 'All sports.');
+			$data['games'] 		= $games;
+			$data['logopath'] 	= asset('/uploads/');
+			return $this->sendResponse($data, 'All games.');
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Sports Not found', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Games Not found', 'errors' => $th->getMessage()]);
         }
+		
+        
     }
 
     /**
@@ -47,13 +55,7 @@ class SportController extends BaseController
      */
     public function store(Request $request)
     {
-		try{
-			$sports = Sport::create(['name' => $request['name']]);
-			return $this->sendResponse($sports, 'New sports created.');
-		}
-        catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Something went wrong.', 'errors' => $th->getMessage()]);
-        }
+        
     }
 
     /**
@@ -65,13 +67,15 @@ class SportController extends BaseController
     public function show($id)
     {
 		try{
-			$sports = Sport::where('id',$id)->first();
-			$sucess['sports'] = $sports; 
-			$success['Championships'] = $sports->championships;
-			return $this->sendResponse($sucess, 'Sports found successfully.');
+			$games 				= Game::where('id',$id)->first();
+			$questions 			= $games->questions;
+			$answers 			= $games->answers;
+			$data['games'] 		= $games; 
+			$data['logopath'] 	= asset('/uploads/');
+			return $this->sendResponse($data, 'Games found successfully.');
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Sport Not found', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Game Not found', 'errors' => $th->getMessage()]);
         }
     }
 
@@ -108,6 +112,6 @@ class SportController extends BaseController
     {
         //
     }
-	
+
 }
 

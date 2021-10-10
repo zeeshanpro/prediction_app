@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\api\v1\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\Models\Championship;
+use Throwable;
 
 class ChampionshipController extends BaseController
 {
@@ -16,7 +17,16 @@ class ChampionshipController extends BaseController
      */
     public function index()
     {
-        //
+        try{
+			$championships = Championship::all();
+			if($championships->isEmpty()){
+				return $this->sendError('No championships found');
+			}
+			return $this->sendResponse($championships, 'All championships.');
+		}
+        catch (\Throwable $th) {
+            return response()->json(['success' => false, 'message' => 'Championships Not found', 'errors' => $th->getMessage()]);
+        }
     }
 
     /**
@@ -37,9 +47,14 @@ class ChampionshipController extends BaseController
      */
     public function store(Request $request)
     {
-        $data =  ['name' => $request['name'] , 'sports_id' => $request['sports_id'] ];
-        $championship = Championship::create($data);
-        return $this->sendResponse($championship, 'New championship created.');
+		try{
+			$data =  ['name' => $request['name'] , 'sports_id' => $request['sports_id'] ];
+			$championship = Championship::create($data);
+			return $this->sendResponse($championship, 'New championship created.');
+		}
+        catch (\Throwable $th) {
+            return response()->json(['success' => false, 'message' => 'Something went wrong.', 'errors' => $th->getMessage()]);
+        }
     }
 
     /**
@@ -50,7 +65,14 @@ class ChampionshipController extends BaseController
      */
     public function show($id)
     {
-        //
+		try{
+			$championship = Championship::where('id',$id)->first();
+			$data['Championship'] = $championship;
+			return $this->sendResponse($data, 'Championship found successfully.');
+		}
+        catch (\Throwable $th) {
+            return response()->json(['success' => false, 'message' => 'Championship Not found', 'errors' => $th->getMessage()]);
+        }
     }
 
     /**
@@ -85,5 +107,18 @@ class ChampionshipController extends BaseController
     public function destroy($id)
     {
         //
+    }
+	
+	public function getChampionshipBySportID($id){
+		
+		try{
+			$championships = Championship::where('sports_id',$id)->latest('championships.created_at')->get();
+			$data['Championships'] = $championships;
+			return $this->sendResponse($data, 'Championships found successfully.');
+		}
+        catch (\Throwable $th) {
+            return response()->json(['success' => false, 'message' => 'Championship Not found.', 'errors' => $th->getMessage()]);
+        }
+		
     }
 }

@@ -26,8 +26,8 @@ Route::resource('sports', SportController::class);
 Route::resource('championships', ChampionshipController::class);
 Route::resource('games', GameController::class);
 
-Route::get('getChampionshipBySportID/{sport_id}', [ChampionshipController::class,'getChampionshipBySportID'])->name('getChampionshipBySportID');
-Route::get('getGameByChampionshipID/{championship_id}', [GameController::class,'getGameByChampionshipID'])->name('getGameByChampionshipID');
+Route::get('getChampionshipsBySportID/{sport_id}', [ChampionshipController::class,'getChampionshipsBySportID'])->name('getChampionshipsBySportID');
+Route::get('getGamesByChampionshipID/{championship_id}', [GameController::class,'getGamesByChampionshipID'])->name('getGamesByChampionshipID');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

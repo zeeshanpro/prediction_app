@@ -113,7 +113,7 @@ class GameController extends BaseController
         //
     }
 	
-	public function getGameByChampionshipID($id){
+	public function getGamesByChampionshipID($id){
 		
 		try{
 			$games = Game::where('championship_id',$id)->latest('games.created_at')->get();

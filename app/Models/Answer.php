@@ -18,6 +18,7 @@ class Answer extends Model
         'game_id',
         'question_id',
         'answer',
+		'points',
         'created_by',
         'updated_by',
     ];

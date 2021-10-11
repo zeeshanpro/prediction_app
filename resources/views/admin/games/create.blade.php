@@ -108,23 +108,24 @@
 					<hr />
 					
 					<div class="form-group">
-						<label>Questions</label>
+						<label>Predictions</label>
 						<div id="questionsDiv">
 							<div class="form-group" id="QuestionDiv_1">
 								<div id="Question_1">
-									<label>Question 1 <a href="javascript:void(0)" data-id="1" onclick="removeQuestion(this)">Remove Question</a></label> 
-									<input type="text" class="form-control"  name="questions[0]" placeholder="Enter Question 1" required >
+									<label>Prediction 1 <a href="javascript:void(0)" data-id="1" onclick="removeQuestion(this)">Remove Prediction</a></label> 
+									<input type="text" class="form-control"  name="questions[0]" placeholder="Enter Predictions 1" required >
 									<div class="input-group topMargin" id="answer_1_1">
-									 <input type="text" class="form-control" name="answers[0][]" placeholder="Enter Answer 1" required >
-									  <div class="input-group-append">
-										<span class="input-group-text"><a href="javascript:void(0)" data-id="1_1" onclick="removeAnswer(this)">Remove Answer</a></span>
-									  </div>
+										<input type="text" class="form-control" name="answers[0][]" placeholder="Enter Odd 1" required >
+										<div class="input-group-append">
+											<input type="text" class="form-control decimal_only" name="points[0][]" placeholder="Point" required >
+											<span class="input-group-text"><a href="javascript:void(0)" data-id="1_1" onclick="removeAnswer(this)">Remove Odd</a></span>
+										</div>
 									</div>
 								</div>
-								<a href="javascript:void(0)" data-Question_no="1" data-Answer_no="2" onclick="addAnswer(this)">Add Answer</a>
+								<a href="javascript:void(0)" data-Question_no="1" data-Answer_no="2" onclick="addAnswer(this)">Add Odd</a>
 							</div>
 						</div>
-						<a href="javascript:void(0)" data-Question_no="2" id="add_question_btn" onclick="addQuestion(this)">Add Question</a>
+						<a href="javascript:void(0)" data-Question_no="2" id="add_question_btn" onclick="addQuestion(this)">Add Prediction</a>
 					</div>
 					
 					<hr />
@@ -213,16 +214,17 @@
 			var QuestionHtml = 
 						'<div class="form-group" id="QuestionDiv_'+Question_no+'">'+
 							'<div id="Question_'+Question_no+'">'+
-								'<label>Question '+Question_no+' <a href="javascript:void(0)" data-id="'+Question_no+'" onclick="removeQuestion(this)">Remove Question</a></label>'+
-								'<input type="text" class="form-control"  name="questions['+Perv_Question_no+']" placeholder="Enter Question '+Question_no+'" required >'+
+								'<label>Prediction '+Question_no+' <a href="javascript:void(0)" data-id="'+Question_no+'" onclick="removeQuestion(this)">Remove Prediction</a></label>'+
+								'<input type="text" class="form-control"  name="questions['+Perv_Question_no+']" placeholder="Enter Prediction '+Question_no+'" required >'+
 								'<div class="input-group topMargin" id="answer_'+Question_no+'_1">'+
-									'<input type="text" class="form-control"  name="answers['+Perv_Question_no+'][]" placeholder="Enter Answer 1" required >'+
+									'<input type="text" class="form-control"  name="answers['+Perv_Question_no+'][]" placeholder="Enter Odd 1" required >'+
 									'<div class="input-group-append">'+
-										'<span class="input-group-text"><a href="javascript:void(0)" data-id="'+Question_no+'_1" onclick="removeAnswer(this)">Remove Answer</a></span>'+
+										'<input type="text" class="form-control decimal_only" name="points['+Perv_Question_no+'][]" placeholder="Point" required >'+
+										'<span class="input-group-text"><a href="javascript:void(0)" data-id="'+Question_no+'_1" onclick="removeAnswer(this)">Remove Odd</a></span>'+
 									'</div>'+
 								'</div>'+
 							'</div>'+
-							'<a href="javascript:void(0)" data-Question_no="'+Question_no+'" data-Answer_no="2" onclick="addAnswer(this)">Add Answer</a>'+
+							'<a href="javascript:void(0)" data-Question_no="'+Question_no+'" data-Answer_no="2" onclick="addAnswer(this)">Add Odd</a>'+
 						'</div>';
 			$("#questionsDiv").append(QuestionHtml);
 			$(e).attr('data-Question_no',Next_Question_no);
@@ -237,9 +239,10 @@
 			
 			var AnswerHtml = 
 							'<div class="input-group topMargin" id="answer_'+Question_no+'_'+Answer_no+'">'+
-								'<input type="text" class="form-control" name="answers['+Perv_Question_no+'][]" placeholder="Enter Answer '+Answer_no+'" required>'+
+								'<input type="text" class="form-control" name="answers['+Perv_Question_no+'][]" placeholder="Enter Odd '+Answer_no+'" required>'+
 								'<div class="input-group-append">'+
-										'<span class="input-group-text"><a href="javascript:void(0)" data-id="'+Question_no+'_'+Answer_no+'" onclick="removeAnswer(this)">Remove Answer</a></span>'+
+									'<input type="text" class="form-control decimal_only" name="points['+Perv_Question_no+'][]" placeholder="Point" required >'+
+									'<span class="input-group-text"><a href="javascript:void(0)" data-id="'+Question_no+'_'+Answer_no+'" onclick="removeAnswer(this)">Remove Odd</a></span>'+
 								'</div>'+
 							'</div>';
 						

@@ -17,6 +17,8 @@ class Sport extends Model
      */
     protected $fillable = [
         'name',
+        'logo',
+        'is_status',
     ];
 
     public function championships(){

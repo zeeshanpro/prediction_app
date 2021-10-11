@@ -29,6 +29,7 @@ class Game extends Model
         'team2Logo',
         'start_time',
         'end_time',
+        'is_status',
         'created_by',
         'updated_by',
     ];

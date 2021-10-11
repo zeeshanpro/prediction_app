@@ -22,7 +22,9 @@ class ChampionshipController extends BaseController
 			if($championships->isEmpty()){
 				return $this->sendError('No championships found');
 			}
-			return $this->sendResponse($championships, 'All championships.');
+			$data['championships'] 	= $championships;
+			$data['logopath'] 		= asset('/uploads/');
+			return $this->sendResponse($data, 'All championships.');
 		}
         catch (\Throwable $th) {
             return response()->json(['success' => false, 'message' => 'Championships Not found', 'errors' => $th->getMessage()]);
@@ -66,8 +68,9 @@ class ChampionshipController extends BaseController
     public function show($id)
     {
 		try{
-			$championship = Championship::where('id',$id)->first();
-			$data['Championship'] = $championship;
+			$championship 			= Championship::where('id',$id)->first();
+			$data['championship'] 	= $championship;
+			$data['logopath'] 		= asset('/uploads/');
 			return $this->sendResponse($data, 'Championship found successfully.');
 		}
         catch (\Throwable $th) {
@@ -112,8 +115,9 @@ class ChampionshipController extends BaseController
 	public function getChampionshipsBySportID($id){
 		
 		try{
-			$championships = Championship::where('sports_id',$id)->latest('championships.created_at')->get();
-			$data['Championships'] = $championships;
+			$championships 			= Championship::where([ 'sports_id' => $id , 'is_status' => 1 ])->latest('championships.created_at')->get();
+			$data['championships'] 	= $championships;
+			$data['logopath'] 		= asset('/uploads/');
 			return $this->sendResponse($data, 'Championships found successfully.');
 		}
         catch (\Throwable $th) {

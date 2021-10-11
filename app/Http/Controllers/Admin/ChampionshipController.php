@@ -27,7 +27,7 @@ class ChampionshipController extends Controller
      */
     public function create()
     {
-		$sports = Sport::all();
+		$sports = Sport::where("is_status",1)->get();
         return view('admin.championships.create',['sports' => $sports]);
     }
 
@@ -42,9 +42,24 @@ class ChampionshipController extends Controller
         Request()->validate([
 			'name' => 'required',
 			'sports_id' => 'required|integer|exists:sports,id',
+			'logo' => 'required',
 		]);
 		
 		$input = $request->all();
+		
+		$Logo_name  = '';
+		$Logo_unique_name = '';
+		if($request->hasFile('logo'))
+		{
+			$fileobj				= $request->file('logo');
+			$Logo_name 				= $fileobj->getClientOriginalName('logo');
+			$Logo_extension_name 	= $fileobj->getClientOriginalExtension('logo');
+			$Logo_unique_name 		= time().rand(1000,9999).'.'.$Logo_extension_name;
+			$destinationPath		= public_path('/uploads/');
+			$fileobj->move($destinationPath,$Logo_unique_name);
+		}
+
+		$input['logo'] 	= $Logo_unique_name;
 		Championship::create($input);
 		
 		return redirect()->route('championships.index')->with( 'success','Championship Successfully Created.' );
@@ -101,6 +116,7 @@ class ChampionshipController extends Controller
 		if(!empty($sportID))
 		{
 			$Filterdata = Championship::where("sports_id",$sportID)
+					->where("is_status",1)
 					->latest('championships.created_at')
 					->get(['championships.*']);
 					

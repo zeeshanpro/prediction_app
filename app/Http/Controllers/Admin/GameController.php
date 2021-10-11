@@ -31,8 +31,8 @@ class GameController extends Controller
      */
     public function create()
     {
-		$data['sports'] = Sport::all();
-		$data['championships'] = Championship::all();
+		$data['sports'] = Sport::where("is_status",1)->get();
+		$data['championships'] = Championship::where("is_status",1)->get();
         return view('admin.games.create',[ 'data' => $data]);
     }
 
@@ -90,13 +90,17 @@ class GameController extends Controller
 		$data['updated_by'] = Auth::user()->id;
 		
 		$questions 	= (isset($data['questions'])) ? $data['questions'] : false;
+		$points 	= (isset($data['points'])) ? $data['points'] : false;
 		$answers 	= (isset($data['answers'])) ? $data['answers'] : false;
 		
 		unset($data['questions']);
+		unset($data['points']);
 		unset($data['answers']);
 		
+		$data['is_status'] = 1;
+		
 		$gameID = Game::create($data)->id;
-		if(!empty($gameID) && !empty($questions) && !empty($answers))
+		if(!empty($gameID) && !empty($questions) && !empty($points) && !empty($answers))
 		{
 			foreach($questions as $i => $question)
 			{
@@ -115,6 +119,7 @@ class GameController extends Controller
 							{
 								$answerData['game_id'] 		= $gameID;
 								$answerData['question_id'] 	= $questionID;
+								$answerData['points'] 		= trim($points[$i][$k]);
 								$answerData['answer'] 		= trim($answers[$i][$k]);
 								$answerData['created_by'] 	= Auth::user()->id;
 								$answerData['updated_by'] 	= Auth::user()->id;

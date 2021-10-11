@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\api\v1\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\Models\Sport;
+use Throwable;
 
 class SportController extends BaseController
 {
@@ -16,11 +17,16 @@ class SportController extends BaseController
      */
     public function index()
     {
-        $sports = Sport::all();
-        if($sports->isEmpty()){
-            return $this->sendError('No sports found');
+		try{
+			$sports = Sport::all();
+			if($sports->isEmpty()){
+				return $this->sendError('No sports found');
+			}
+			return $this->sendResponse($sports, 'All sports.');
+		}
+        catch (\Throwable $th) {
+            return response()->json(['success' => false, 'message' => 'Sports Not found', 'errors' => $th->getMessage()]);
         }
-        return $this->sendResponse($sports, 'All sports.');
     }
 
     /**
@@ -41,8 +47,13 @@ class SportController extends BaseController
      */
     public function store(Request $request)
     {
-        $sports = Sport::create(['name' => $request['name']]);
-        return $this->sendResponse($sports, 'New sports created.');
+		try{
+			$sports = Sport::create(['name' => $request['name']]);
+			return $this->sendResponse($sports, 'New sports created.');
+		}
+        catch (\Throwable $th) {
+            return response()->json(['success' => false, 'message' => 'Something went wrong.', 'errors' => $th->getMessage()]);
+        }
     }
 
     /**
@@ -53,10 +64,15 @@ class SportController extends BaseController
      */
     public function show($id)
     {
-        $sports = Sport::where('id',$id)->first();
-        $sucess['sports'] = $sports; 
-        $success['Championships'] = $sports->championships;
-        return $this->sendResponse($sucess, 'Sports found successfully.');
+		try{
+			$sports = Sport::where('id',$id)->first();
+			$sucess['sports'] = $sports; 
+			$success['Championships'] = $sports->championships;
+			return $this->sendResponse($sucess, 'Sports found successfully.');
+		}
+        catch (\Throwable $th) {
+            return response()->json(['success' => false, 'message' => 'Sport Not found', 'errors' => $th->getMessage()]);
+        }
     }
 
     /**
@@ -92,9 +108,6 @@ class SportController extends BaseController
     {
         //
     }
-
-    public function getChampionshipBySport(){
-
-    }
+	
 }
 

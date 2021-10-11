@@ -19,15 +19,29 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 Route::get('/login_v2', function () {
     return view('auth/login_v2');
 });
 
-Route::get('/home_v2', function () {
-    return view('home_v2');
+
+
+Route::group(['middleware' => ['auth'] ] , function (){
+	Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+	Route::get('home_v2', function () { return view('home_v2'); });
 });
+
+Route::group( ['prefix' => 'admin','middleware' => ['auth'] ] , function (){	
+	Route::get('users',[App\Http\Controllers\Admin\UserController::class,'index'])->name('users');
+	Route::resource('sports',App\Http\Controllers\Admin\SportController::class);
+	Route::resource('championships',App\Http\Controllers\Admin\ChampionshipController::class);
+	Route::resource('games',App\Http\Controllers\Admin\GameController::class);
+	Route::post('championships/getChampionshipBySportID',[App\Http\Controllers\Admin\ChampionshipController::class,'LoadChampionshipListBySportID'])->name('getChampionshipBySportID');
+});
+
+
+
+/*
+
 
 Route::resource('admin/user', App\Http\Controllers\Admin\UserController::class, [
     'names' => [
@@ -58,3 +72,4 @@ Route::resource('admin/game', App\Http\Controllers\Admin\GameController::class, 
     ]
 ]);
 
+*/

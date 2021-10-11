@@ -5,10 +5,14 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\api\v1\BaseController as BaseController;
 use Illuminate\Http\Request;
+use App\Models\Sport;
 use App\Models\Championship;
+use App\Models\Game;
+use App\Models\Question;
+use App\Models\Answer;
 use Throwable;
 
-class ChampionshipController extends BaseController
+class GameController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -17,16 +21,20 @@ class ChampionshipController extends BaseController
      */
     public function index()
     {
-        try{
-			$championships = Championship::all();
-			if($championships->isEmpty()){
-				return $this->sendError('No championships found');
+		try{
+			$games = Game::all();
+			if($games->isEmpty()){
+				return $this->sendError('No games found');
 			}
-			return $this->sendResponse($championships, 'All championships.');
+			$data['games'] 		= $games;
+			$data['logopath'] 	= asset('/uploads/');
+			return $this->sendResponse($data, 'All games.');
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Championships Not found', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Games Not found', 'errors' => $th->getMessage()]);
         }
+		
+        
     }
 
     /**
@@ -47,14 +55,7 @@ class ChampionshipController extends BaseController
      */
     public function store(Request $request)
     {
-		try{
-			$data =  ['name' => $request['name'] , 'sports_id' => $request['sports_id'] ];
-			$championship = Championship::create($data);
-			return $this->sendResponse($championship, 'New championship created.');
-		}
-        catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Something went wrong.', 'errors' => $th->getMessage()]);
-        }
+        
     }
 
     /**
@@ -66,12 +67,15 @@ class ChampionshipController extends BaseController
     public function show($id)
     {
 		try{
-			$championship = Championship::where('id',$id)->first();
-			$data['Championship'] = $championship;
-			return $this->sendResponse($data, 'Championship found successfully.');
+			$games 				= Game::where('id',$id)->first();
+			$questions 			= $games->questions;
+			$answers 			= $games->answers;
+			$data['games'] 		= $games; 
+			$data['logopath'] 	= asset('/uploads/');
+			return $this->sendResponse($data, 'Games found successfully.');
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Championship Not found', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Game Not found', 'errors' => $th->getMessage()]);
         }
     }
 
@@ -109,16 +113,18 @@ class ChampionshipController extends BaseController
         //
     }
 	
-	public function getChampionshipsBySportID($id){
+	public function getGamesByChampionshipID($id){
 		
 		try{
-			$championships = Championship::where('sports_id',$id)->latest('championships.created_at')->get();
-			$data['Championships'] = $championships;
-			return $this->sendResponse($data, 'Championships found successfully.');
+			$games = Game::where('championship_id',$id)->latest('games.created_at')->get();
+			$data['games'] = $games;
+			return $this->sendResponse($data, 'Games found successfully.');
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Championship Not found.', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Game Not found.', 'errors' => $th->getMessage()]);
         }
 		
     }
+
 }
+

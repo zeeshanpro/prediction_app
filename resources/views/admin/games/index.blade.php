@@ -39,35 +39,41 @@
             <div class="card-body">
             <table id="example1" class="table table-bordered table-striped">
                 <thead>
-                <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Sports</th>
-                <th>Championships</th>
-                <th>Created Date</th>
-                </tr>
+					<tr>
+						<th>ID</th>
+						<th>Sports</th>
+						<th>Championships</th>
+						<th>Type</th>
+						<th>Status</th>
+						<th>Created Date</th>
+						<th>Action</th>
+					</tr>
                 </thead>
                 <tbody>
 				@if(isset($games) && !empty($games))
 					@foreach($games as $dt)
 					<tr>
 						<td>{{ $dt->id }}</td>
-						<td>{{ $dt->name }}</td>
 						<td>{{ $dt->sport->name }}</td>
-						<td>{{ $dt->sport->name }}</td>
+						<td>{{ $dt->championships->name }}</td>
+						<td>{{ ($dt->is_status == 1 ) ? 'Publish' : 'Hide' }}</td>
+						<td>{{ ($dt->is_status == 1 ) ? 'Single' : 'Team' }}</td>
 						<td>{{ $dt->created_at }}</td>
+						<td><a href="{{ route('games.edit',$dt->id) }}">Edit</a></td>
 					</tr>
 					@endforeach
                 @endif
                 </tbody>
                 <tfoot>
-                <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Sports</th>
-				<th>Championships</th>
-                <th>Created Date</th>
-                </tr>
+					<tr>
+						<th>ID</th>
+						<th>Sports</th>
+						<th>Championships</th>
+						<th>Type</th>
+						<th>Status</th>
+						<th>Created Date</th>
+						<th>Action</th>
+					</tr>
                 </tfoot>
             </table>
             </div>

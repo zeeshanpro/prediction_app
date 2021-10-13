@@ -105,6 +105,19 @@
 						</div>
 					</div>
 					
+					<div class="row">
+						<div class="col-12">
+							<div class="form-group">
+								<label>Status</label>
+								<select class="form-control" style="width: 100%;" id="is_status" name="is_status" required >
+									<option value="">Select Status</option>
+									<option value="1">Publish</option>
+									<option value="0">Hide</option>
+								  </select>
+							</div>
+						</div>
+					</div>
+					
 					<hr />
 					
 					<div class="form-group">

@@ -21,7 +21,8 @@ class GameController extends Controller
      */
     public function index()
     {
-        return view('admin.games.index');
+		$games = Game::all();
+        return view('admin.games.index',[ 'games' => $games ]);
     }
 
     /**
@@ -97,7 +98,7 @@ class GameController extends Controller
 		unset($data['points']);
 		unset($data['answers']);
 		
-		$data['is_status'] = 1;
+		//$data['is_status'] = 1;
 		
 		$gameID = Game::create($data)->id;
 		if(!empty($gameID) && !empty($questions) && !empty($points) && !empty($answers))

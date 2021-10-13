@@ -39,30 +39,36 @@
             <div class="card-body">
             <table id="example1" class="table table-bordered table-striped">
                 <thead>
-                <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Created Date</th>
-                </tr>
+					<tr>
+						<th>ID</th>
+						<th>Name</th>
+						<th>Status</th>
+						<th>Logo</th>
+						<th>Created Date</th>
+						<th>Action</th>
+					</tr>
                 </thead>
                 <tbody>
                 @foreach($sports as $dt)
                 <tr>
-               
-                
                     <td>{{ $dt->id }}</td>
                     <td>{{ $dt->name }}</td>
+                    <td><a href="{{ asset('/uploads/'.$dt->logo) }}" target="_blank">View</a></td>
+                    <td>{{ ($dt->is_status == 1 ) ? 'Show' : 'Hide' }}</td>
                     <td>{{ $dt->created_at }}</td>
-                    
+                    <td><a href="{{ route('sports.edit',$dt->id) }}">Edit</a></td>
                 </tr>
                 @endforeach
                 </tbody>
                 <tfoot>
-                <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Created Date</th>
-                </tr>
+					<tr>
+						<th>ID</th>
+						<th>Name</th>
+						<th>Status</th>
+						<th>Logo</th>
+						<th>Created Date</th>
+						<th>Action</th>
+					</tr>
                 </tfoot>
             </table>
             </div>

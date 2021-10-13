@@ -73,7 +73,7 @@ class ChampionshipController extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**
@@ -84,7 +84,9 @@ class ChampionshipController extends Controller
      */
     public function edit($id)
     {
-        //
+        $championship = Championship::find($id);
+		$sports = Sport::where("is_status",1)->get();
+		return view('admin.championships.edit',[ 'sports' => $sports , 'championship' => $championship ]);
     }
 
     /**
@@ -96,7 +98,32 @@ class ChampionshipController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        Request()->validate([
+			'name' => 'required',
+			'sports_id' => 'required|integer|exists:sports,id',
+		]);
+		
+		$input = $request->all();
+		
+		$Logo_name  = '';
+		$Logo_unique_name = '';
+		if($request->hasFile('logo'))
+		{
+			$fileobj				= $request->file('logo');
+			$Logo_name 				= $fileobj->getClientOriginalName('logo');
+			$Logo_extension_name 	= $fileobj->getClientOriginalExtension('logo');
+			$Logo_unique_name 		= time().rand(1000,9999).'.'.$Logo_extension_name;
+			$destinationPath		= public_path('/uploads/');
+			$fileobj->move($destinationPath,$Logo_unique_name);
+			$input['logo'] 	= $Logo_unique_name;
+		}
+
+		unset($input['_token']);
+		unset($input['_method']);
+		
+		Championship::where([ 'id' => $id ])->update($input);
+		
+		return redirect()->route('championships.index')->with( 'success','Championship Successfully Updated.' );
     }
 
     /**

@@ -8,6 +8,8 @@ use App\Models\Sport;
 use App\Models\Championship;
 use App\Models\Question;
 use App\Models\Answer;
+use App\Models\Team;
+use DB;
 
 class Game extends Model
 {
@@ -23,10 +25,8 @@ class Game extends Model
         'sport_id',
         'championship_id',
         'type',
-        'team1',
-        'team1Logo',
-        'team2',
-        'team2Logo',
+        'team1id',
+        'team2id',
         'start_time',
         'end_time',
         'is_status',
@@ -49,6 +49,14 @@ class Game extends Model
 	
 	public function answers(){
         return $this->hasMany(Answer::class,'game_id');    
+    }
+	
+	public function team1(){
+        return $this->belongsTo(Team::class,'id');    
+    }
+	
+	public function team2(){
+        return $this->belongsTo(Team::class,'id');    
     }
 	
 }

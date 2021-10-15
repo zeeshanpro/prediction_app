@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Game;
 use App\Models\Sport;
 use App\Models\Championship;
+use App\Models\Team;
 use App\Models\Question;
 use App\Models\Answer;
 use Carbon\Carbon;
@@ -34,6 +35,7 @@ class GameController extends Controller
     {
 		$data['sports'] = Sport::where("is_status",1)->get();
 		$data['championships'] = Championship::where("is_status",1)->get();
+		$data['teams'] = Team::where("is_status",1)->get();
         return view('admin.games.create',[ 'data' => $data]);
     }
 
@@ -49,13 +51,14 @@ class GameController extends Controller
 			'sport_id' => 'required|integer|exists:sports,id',
 			'championship_id' => 'required|integer|exists:championships,id',
 			'type' => 'required|integer',
-			'team1' => 'required',
+			'team1id' => 'required|integer|exists:teams,id',
 			'startdatetime' => 'required',
 			'enddatetime' => 'required',
 		]);
 		
         $data = $request->all();
-
+		//dd($data);
+		/*
 		$team1Logo_name  = '';
 		$team1Logo_unique_name = '';
 		if($request->hasFile('team1Logo'))
@@ -83,7 +86,7 @@ class GameController extends Controller
 		}
 
 		$data['team2Logo'] 	= $team2Logo_unique_name;
-		
+		*/
 		$data['start_time'] 	= Carbon::parse($data['startdatetime'])->format('Y-m-d H:i:s');
 		$data['end_time'] 	= Carbon::parse($data['enddatetime'])->format('Y-m-d H:i:s');
 		
@@ -93,10 +96,14 @@ class GameController extends Controller
 		$questions 	= (isset($data['questions'])) ? $data['questions'] : false;
 		$points 	= (isset($data['points'])) ? $data['points'] : false;
 		$answers 	= (isset($data['answers'])) ? $data['answers'] : false;
+		$teams 		= (isset($data['teams'])) ? $data['teams'] : false;
+		$trueAns 	= (isset($data['trueAns'])) ? $data['trueAns'] : false;
 		
 		unset($data['questions']);
 		unset($data['points']);
 		unset($data['answers']);
+		unset($data['teams']);
+		unset($data['trueAns']);
 		
 		//$data['is_status'] = 1;
 		
@@ -122,6 +129,8 @@ class GameController extends Controller
 								$answerData['question_id'] 	= $questionID;
 								$answerData['points'] 		= trim($points[$i][$k]);
 								$answerData['answer'] 		= trim($answers[$i][$k]);
+								$answerData['team_id'] 		= trim($teams[$i][$k]);
+								$answerData['is_true'] 		= (isset($trueAns[$i]) && !empty($trueAns[$i]) && $trueAns[$i] == $k+1) ? 1 : 0;
 								$answerData['created_by'] 	= Auth::user()->id;
 								$answerData['updated_by'] 	= Auth::user()->id;
 								$answerID = Answer::create($answerData)->id;

@@ -5,9 +5,6 @@
 .topMargin{
 	margin-top:10px !important;
 }
-.trueAnschk{
-	margin: 10px !important;
-}
 </style>
  <!-- Content Header (Page header) -->
  <section class="content-header">
@@ -43,7 +40,7 @@
 					<div class="form-group">
 					  <label>Sports</label>
 					  <select class="form-control" style="width: 100%;" id="sportOpt" name="sport_id" required onchange="getChampionshipBySportID(this)">
-						<option value="">Select Sport</option>
+						<option value="">Select Sports</option>
 							@if(isset($data['sports']) && !empty($data['sports']))
 								@foreach($data['sports'] as $dt)
 									<option value="{{ $dt->id }}"> {{ $dt->name }}</option>
@@ -76,32 +73,22 @@
 
 					<div class="form-group">
 						<label>Team Name</label>
-						<select class="form-control" style="width: 100%;" id="team1" name="team1id" required onchange="getTeamOptions()" >
-							<option value="">Select Team</option>
-							@if(isset($data['teams']) && !empty($data['teams']))
-								@foreach($data['teams'] as $dt)
-									<option value="{{ $dt->id }}"> {{ $dt->name }}</option>
-								@endforeach
-							@endif
-						</select>
+						<input type="text" class="form-control" id="team1" name="team1" placeholder="Enter team name" required >
+						<label>Team Logo</label>
+						<input type="file" class="form-control" id="team1Logo" name="team1Logo" accept="image/*" onchange="allowonlyImg(this)" required>
 					</div>
 					
 					<div class="form-group" id="team2Div" style="display:none">
 						<label>Team 2 Name</label>
-						<select class="form-control" style="width: 100%;" id="team2" name="team2id" onchange="getTeamOptions()">
-						<option value="">Select Team</option>
-							@if(isset($data['teams']) && !empty($data['teams']))
-								@foreach($data['teams'] as $dt)
-									<option value="{{ $dt->id }}"> {{ $dt->name }}</option>
-								@endforeach
-							@endif
-					  </select>
+						<input type="text" class="form-control" id="team2" name="team2" placeholder="Enter team name" >
+						<label>Team 2 Logo</label>
+						<input type="file" class="form-control" id="team2Logo" name="team2Logo" accept="image/*" onchange="allowonlyImg(this)">
 					</div>
 
 					<div class="form-group">
 						<label>Game start date time</label>
 						<div class="input-group date" id="startdatetime" data-target-input="nearest">
-							<input type="text" class="form-control datetimepicker-input" name="startdatetime" data-target="#startdatetime" required/>
+							<input type="text" class="form-control datetimepicker-input" name="startdatetime" -target="#startdatetime" required/>
 							<div class="input-group-append" data-target="#startdatetime" data-toggle="datetimepicker">
 								<div class="input-group-text"><i class="fa fa-calendar"></i></div>
 							</div>
@@ -130,12 +117,9 @@
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
 					
 					<hr />
-			<div class="row">
-				  <div class="col-md-12">		
+					
 					<div class="form-group">
 						<label>Predictions</label>
 						<div id="questionsDiv">
@@ -147,10 +131,6 @@
 										<input type="text" class="form-control" name="answers[0][]" placeholder="Enter Odd 1" required >
 										<div class="input-group-append">
 											<input type="text" class="form-control decimal_only" name="points[0][]" placeholder="Point" required >
-											<select class="form-control teamsOpt" name="teams[0][]" required >
-												<option value="">Select Team</option>	
-											</select>
-											<input class="trueAnschk" type="radio" name="trueAns[0]" value="1">
 											<span class="input-group-text"><a href="javascript:void(0)" data-id="1_1" onclick="removeAnswer(this)">Remove Odd</a></span>
 										</div>
 									</div>
@@ -184,46 +164,6 @@
 @once
     @push('scripts')
         <script>
-		
-		  var TeamHtml = "";
-		  function getTeamOptions()
-		  {
-			var team1Opt = '';
-			var team2Opt = '';
-			var selected = '';
-			
-			var TypeID = $('input[name="type"]:checked').val();
-			if(TypeID == 1)
-					selected = 'selected';
-			
-			if($("#team1").val() != '')
-			{
-				var team1Text = $("#team1").children("option:selected").html();
-				var team1Value = $("#team1").children("option:selected").val();
-				
-				if(team1Value != '')
-					team1Opt = '<option value="'+team1Value+'" '+selected+'>'+team1Text+'</option>';
-			}
-
-			if(TypeID == 2)
-			{
-				if($("#team2").val() != '')
-				{
-					var team2Text = $("#team2").children("option:selected").html();
-					var team2Value = $("#team2").children("option:selected").val();
-					if(team2Value != '')
-						team2Opt = '<option value="'+team2Value+'">'+team2Text+'</option>';
-				}
-			}
-			
-			TeamHtml = '<option value="">Select Team</option>'+
-							team1Opt+
-							team2Opt;
-							
-			$(".teamsOpt").html('');
-			$(".teamsOpt").html(TeamHtml);			
-		  }
-		  
           $('document').ready(function() {
 
             //Date and time picker
@@ -232,14 +172,14 @@
 
             $('input[name="type"]').change(function(){
                if(this.checked){
-				   getTeamOptions();
                    if($(this).val() == 2){
                        $('#team2Div').css('display','block');
                        $('#team2').attr('required',true);
+                       $('#team2Logo').attr('required',true);
                    } else{
                        $('#team2Div').css('display','none');
 					   $('#team2').attr('required',false);
-					   //$('#team2').val('');
+                       $('#team2Logo').attr('required',false);
                    }
                }
            });
@@ -293,10 +233,6 @@
 									'<input type="text" class="form-control"  name="answers['+Perv_Question_no+'][]" placeholder="Enter Odd 1" required >'+
 									'<div class="input-group-append">'+
 										'<input type="text" class="form-control decimal_only" name="points['+Perv_Question_no+'][]" placeholder="Point" required >'+
-										'<select class="form-control teamsOpt" name="teams['+Perv_Question_no+'][]" required >'+
-											TeamHtml+	
-										'</select>'+
-										'<input class="trueAnschk" type="radio" name="trueAns['+Perv_Question_no+']" value="1">'+
 										'<span class="input-group-text"><a href="javascript:void(0)" data-id="'+Question_no+'_1" onclick="removeAnswer(this)">Remove Odd</a></span>'+
 									'</div>'+
 								'</div>'+
@@ -319,10 +255,6 @@
 								'<input type="text" class="form-control" name="answers['+Perv_Question_no+'][]" placeholder="Enter Odd '+Answer_no+'" required>'+
 								'<div class="input-group-append">'+
 									'<input type="text" class="form-control decimal_only" name="points['+Perv_Question_no+'][]" placeholder="Point" required >'+
-									'<select class="form-control teamsOpt" name="teams['+Perv_Question_no+'][]" required >'+
-										TeamHtml+	
-									'</select>'+
-									'<input class="trueAnschk" type="radio" name="trueAns['+Perv_Question_no+']" value="'+Answer_no+'">'+
 									'<span class="input-group-text"><a href="javascript:void(0)" data-id="'+Question_no+'_'+Answer_no+'" onclick="removeAnswer(this)">Remove Odd</a></span>'+
 								'</div>'+
 							'</div>';

@@ -299,7 +299,30 @@
           </ul>
         </li> 
 
-
+		<li class="nav-item {{ Request::segment(2) == 'teams' ? 'menu-is-opening menu-open' : '' }} ">
+          <a href="javascript:void(0)" class="nav-link">
+            <i class="nav-icon fab fa-steam"></i>
+            <p>
+              Teams
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+			<li class="nav-item {{ Request::segment(2) == 'teams' && Request::segment(3) == '' ? 'activeLi' : '' }}">
+              <a href="{{ route('teams.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>All Teams</p>
+              </a>
+            </li>
+            <li class="nav-item {{ Request::segment(2) == 'teams' && Request::segment(3) == 'create' ? 'activeLi' : '' }}">
+              <a href="{{ route('teams.create') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Team</p>
+              </a>
+            </li>
+          </ul>
+        </li> 
+		
 		<li class="nav-item {{ Request::segment(2) == 'games' ? 'menu-is-opening menu-open' : '' }} ">
           <a href="javascript:void(0)" class="nav-link">
             <i class="nav-icon fab fa-steam"></i>

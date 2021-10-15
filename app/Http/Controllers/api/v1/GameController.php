@@ -68,6 +68,8 @@ class GameController extends BaseController
     {
 		try{
 			$games 				= Game::where('id',$id)->first();
+			$team1 				= $games->team1;
+			$team2 				= $games->team2;
 			$questions 			= $games->questions;
 			$answers 			= $games->answers;
 			$data['games'] 		= $games; 

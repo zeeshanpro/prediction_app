@@ -150,7 +150,7 @@
 											<select class="form-control teamsOpt" name="teams[0][]" required >
 												<option value="">Select Team</option>	
 											</select>
-											<input class="trueAnschk" type="radio" name="trueAns[0]" value="1">
+											<input class="trueAnschk" type="checkbox" name="trueAns[0][1]" value="1">
 											<span class="input-group-text"><a href="javascript:void(0)" data-id="1_1" onclick="removeAnswer(this)">Remove Odd</a></span>
 										</div>
 									</div>
@@ -296,7 +296,7 @@
 										'<select class="form-control teamsOpt" name="teams['+Perv_Question_no+'][]" required >'+
 											TeamHtml+	
 										'</select>'+
-										'<input class="trueAnschk" type="radio" name="trueAns['+Perv_Question_no+']" value="1">'+
+										'<input class="trueAnschk" type="checkbox" name="trueAns['+Perv_Question_no+'][1]" value="1">'+
 										'<span class="input-group-text"><a href="javascript:void(0)" data-id="'+Question_no+'_1" onclick="removeAnswer(this)">Remove Odd</a></span>'+
 									'</div>'+
 								'</div>'+
@@ -322,7 +322,7 @@
 									'<select class="form-control teamsOpt" name="teams['+Perv_Question_no+'][]" required >'+
 										TeamHtml+	
 									'</select>'+
-									'<input class="trueAnschk" type="radio" name="trueAns['+Perv_Question_no+']" value="'+Answer_no+'">'+
+									'<input class="trueAnschk" type="checkbox" name="trueAns['+Perv_Question_no+']['+Answer_no+']" value="1">'+
 									'<span class="input-group-text"><a href="javascript:void(0)" data-id="'+Question_no+'_'+Answer_no+'" onclick="removeAnswer(this)">Remove Odd</a></span>'+
 								'</div>'+
 							'</div>';

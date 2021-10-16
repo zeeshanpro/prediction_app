@@ -130,7 +130,7 @@ class GameController extends Controller
 								$answerData['points'] 		= trim($points[$i][$k]);
 								$answerData['answer'] 		= trim($answers[$i][$k]);
 								$answerData['team_id'] 		= trim($teams[$i][$k]);
-								$answerData['is_true'] 		= (isset($trueAns[$i]) && !empty($trueAns[$i]) && $trueAns[$i] == $k+1) ? 1 : 0;
+								$answerData['is_true'] 		= (isset($trueAns[$i][$k+1])) ? 1 : 0;
 								$answerData['created_by'] 	= Auth::user()->id;
 								$answerData['updated_by'] 	= Auth::user()->id;
 								$answerID = Answer::create($answerData)->id;

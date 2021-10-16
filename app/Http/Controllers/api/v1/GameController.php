@@ -7,6 +7,7 @@ use App\Http\Controllers\api\v1\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\Models\Sport;
 use App\Models\Championship;
+use App\Models\Team;
 use App\Models\Game;
 use App\Models\Question;
 use App\Models\Answer;
@@ -68,11 +69,18 @@ class GameController extends BaseController
     {
 		try{
 			$games 				= Game::where('id',$id)->first();
-			$team1 				= $games->team1;
-			$team2 				= $games->team2;
+			
+			$teams = [];
+			
+			if(!empty($games->team1id))
+				$teams['team1'] = Team::where([ "id" => $games->team1id ,"is_status" => 1 ])->get();
+			if(!empty($games->team2id))
+				$teams['team2'] = Team::where([ "id" => $games->team2id ,"is_status" => 1 ])->get();
+			
 			$questions 			= $games->questions;
 			$answers 			= $games->answers;
 			$data['games'] 		= $games; 
+			$data['teams'] 		= $teams; 
 			$data['logopath'] 	= asset('/uploads/');
 			return $this->sendResponse($data, 'Games found successfully.');
 		}

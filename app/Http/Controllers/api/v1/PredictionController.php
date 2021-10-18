@@ -92,23 +92,41 @@ class PredictionController extends BaseController
 			Request()->validate([
 				'userid' => 'required|integer|exists:users,id',
 				'game_id' => 'required|integer|exists:games,id',
-				'answerids' => 'required'
+				'answerids' => 'required',
+				'credits' => 'required',
 			]);
 			
 			$data = $request->all();
 			if(!empty($data) && isset($data['userid']))
 			{
 				$answerids 	= $data['answerids'];
+				$userid 	= $data['userid'];
+				$game_id 	= $data['game_id'];
 				$credits 	= $data['credits'];
-				for($i=0; $i<count($answerids);$i++)
+				
+				$checkPrediction = Prediction::where(array( "game_id" => $game_id , "userid" => $userid ))->first();
+				if(empty($checkPrediction))
 				{
-					$data['userid'] 	= $data['userid'];
-					$data['answerid'] 	= $answerids[$i];
-					$data['credit'] 	= trim($credits[$i]);
-					Prediction::create($data);
+					for($i=0; $i<count($answerids);$i++)
+					{
+						$data['userid'] 	= $userid;
+						$data['game_id'] 	= $game_id;
+						$data['answerid'] 	= $answerids[$i];
+						$data['credit'] 	= $credits;
+						Prediction::create($data);
+					}
+					
+					return response()->json(['success' => true, 'message' => 'Prediction successfully saved.']);
+				}
+				else
+				{
+					return response()->json(['success' => false, 'message' => 'This user has already made a prediction against this game.']);
 				}
 			}
-			return response()->json(['success' => true, 'message' => 'Prediction successfully saved.']);
+			else
+			{
+				return response()->json(['success' => false, 'message' => 'Required parameter missing.']);
+			}
 		}
         catch (\Throwable $th) {
             return response()->json(['success' => false, 'message' => 'something went wrong.', 'errors' => $th->getMessage()]);

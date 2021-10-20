@@ -18,7 +18,9 @@ class Prediction extends Model
         'userid',
         'game_id',
         'answerid',
-        'credit'
+        'credit',
+		'is_true',
+		'gain_credit'
     ];
 }
 

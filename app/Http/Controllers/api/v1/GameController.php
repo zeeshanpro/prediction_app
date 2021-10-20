@@ -126,7 +126,8 @@ class GameController extends BaseController
 	public function getGamesByChampionshipID($id){
 		
 		try{
-			$games 				= Game::where([ 'championship_id' => $id , 'is_status' => 1 ])->latest('games.created_at')->get();
+			$today 				= date("Y-m-d H:i:s");
+			$games 				= Game::where([ 'championship_id' => $id , 'is_status' => 1 ])->where("end_time" ,">=" ,$today)->latest('games.created_at')->get();
 			$data['games'] 		= $games;
 			$data['logopath'] 	= asset('/uploads/');
 			return $this->sendResponse($data, 'Games found successfully.');

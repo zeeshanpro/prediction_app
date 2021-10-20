@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\api\v1\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\Models\Prediction;
+use App\Models\Game;
 use Throwable;
 
 class PredictionController extends BaseController
@@ -103,24 +104,40 @@ class PredictionController extends BaseController
 				$userid 	= $data['userid'];
 				$game_id 	= $data['game_id'];
 				$credits 	= $data['credits'];
-				
-				$checkPrediction = Prediction::where(array( "game_id" => $game_id , "userid" => $userid ))->first();
-				if(empty($checkPrediction))
+				if(!empty($game_id))
 				{
-					for($i=0; $i<count($answerids);$i++)
+					$checkGame = Game::where(array( "id" => $game_id))->where('end_time','>=',date("Y-m-d H:i:s"))->first();
+					if(!empty($checkGame))
 					{
-						$data['userid'] 	= $userid;
-						$data['game_id'] 	= $game_id;
-						$data['answerid'] 	= $answerids[$i];
-						$data['credit'] 	= $credits;
-						Prediction::create($data);
+						$checkPrediction = Prediction::where(array( "game_id" => $game_id , "userid" => $userid ))->first();
+						if(empty($checkPrediction))
+						{
+							for($i=0; $i<count($answerids);$i++)
+							{
+								$data['userid'] 		= $userid;
+								$data['game_id'] 		= $game_id;
+								$data['answerid'] 		= $answerids[$i];
+								$data['credit'] 		= $credits;
+								$data['is_true'] 		= 0;
+								$data['gain_credit'] 	= 0;
+								Prediction::create($data);
+							}
+							
+							return response()->json(['success' => true, 'message' => 'Prediction successfully saved.']);
+						}
+						else
+						{
+							return response()->json(['success' => false, 'message' => 'This user has already made a prediction against this game.']);
+						}
 					}
-					
-					return response()->json(['success' => true, 'message' => 'Prediction successfully saved.']);
+					else
+					{
+						return response()->json(['success' => false, 'message' => 'Prediction Duration has been expired.']);
+					}
 				}
 				else
 				{
-					return response()->json(['success' => false, 'message' => 'This user has already made a prediction against this game.']);
+					return response()->json(['success' => false, 'message' => 'Game ID is missing.']);
 				}
 			}
 			else

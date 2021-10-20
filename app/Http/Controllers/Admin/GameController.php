@@ -10,6 +10,7 @@ use App\Models\Championship;
 use App\Models\Team;
 use App\Models\Question;
 use App\Models\Answer;
+use App\Models\Prediction;
 use Carbon\Carbon;
 use Auth;
 use Throwable;
@@ -308,6 +309,41 @@ class GameController extends Controller
 				return response()->json(array('status' => true , 'message'=> "Answer successfully Deleted"), 200);
 			}catch (\Throwable $th) {
 				return response()->json(['success' => false, 'message' => 'Answer Not found', 'errors' => $th->getMessage()]);
+			}
+			
+		}
+    }
+	
+	public function allocateRewardByGameID()
+    {
+        $gameID = (isset($_POST['gameID']) && !empty($_POST['gameID'])) ? $_POST['gameID'] : false;
+		if(!empty($gameID))
+		{
+			try{
+				$answerData = Answer::where(["game_id" => $gameID , "is_true" => 1 ])->get();
+				if(!empty($answerData))
+				{
+					foreach($answerData as $answer)
+					{
+						$where["game_id"] = $gameID;
+						$where["answerid"] = $answer->id;
+						$predictionData = Prediction::where($where)->get();
+						if(!empty($predictionData))
+						{
+							foreach($predictionData as $prediction)
+							{
+								$updateArray['is_true'] 	= 1;
+								$updateArray['gain_credit'] = ( $prediction->credit * $answer->points );
+								Prediction::where($where)->update($updateArray);
+							}
+						}
+					}
+					
+					Game::where([ "id" => $gameID])->update(array( "is_allocate" => 1 , "is_status" =>  2 ));
+				}
+				return response()->json(array('status' => true , 'message'=> "Credit successfully allocated"), 200);
+			}catch (\Throwable $th) {
+				return response()->json(['success' => false, 'message' => 'something went wrong', 'errors' => $th->getMessage()]);
 			}
 			
 		}

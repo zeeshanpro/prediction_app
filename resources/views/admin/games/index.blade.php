@@ -57,15 +57,27 @@
                 </thead>
                 <tbody>
 				@if(isset($games) && !empty($games))
+					<?php $statusArray = array("Hide","Publish","Completed"); ?>
 					@foreach($games as $dt)
 					<tr>
 						<td>{{ $dt->id }}</td>
 						<td>{{ $dt->sport->name }}</td>
 						<td>{{ $dt->championships->name }}</td>
-						<td>{{ ($dt->is_status == 1 ) ? 'Publish' : 'Hide' }}</td>
-						<td>{{ ($dt->is_status == 1 ) ? 'Single' : 'Team' }}</td>
+						<td>{{ (isset($statusArray[$dt->is_status])) ? $statusArray[$dt->is_status] : '-' }}</td>
+						<td>{{ ($dt->type == 1 ) ? 'Single' : 'Team' }}</td>
 						<td>{{ $dt->created_at }}</td>
-						<td><a href="{{ route('games.edit',$dt->id) }}">Edit</a></td>
+						<td>
+							<a href="{{ route('games.edit',$dt->id) }}">Edit</a>
+							<?php 
+								if($dt->end_time <= date("Y-m-d H:i:s")){
+									if($dt->is_allocate == 0){
+							?>
+										| <a href="javascript:void(0)" onclick="allocateReward(this)" data-id="{{ $dt->id }}">Allocate Reward</a>
+							<?php	
+									}
+								}
+							?>
+						</td>
 					</tr>
 					@endforeach
                 @endif
@@ -94,5 +106,50 @@
     <!-- /.container-fluid -->
 </section>
 <!-- /.content -->
+
+<script>		
+	function allocateReward(e)
+		{
+			var gameID = $(e).attr('data-id');
+			if(gameID !="")
+			{
+				if (confirm('Do you want to process this request?')) {
+					$.ajaxSetup({
+						headers: {
+							'X-CSRF-TOKEN': "{{ csrf_token() }}"
+						}
+					});
+					
+					var type = "POST";
+					var ajaxurl = '/admin/games/allocateRewardByGameID';
+					$.ajax({
+						type: type,
+						url: ajaxurl,
+						data: {"gameID" : gameID },
+						dataType: 'json',
+						success: function (data) {
+							if(data.status)
+							{
+								alert(data.message);
+								location.reload();
+							}
+							else
+							{
+								alert("Something went wrong.");
+							}
+						},
+						error: function (data) {
+			
+						}
+					});
+				}
+			}
+			else
+			{
+				var answerID = $(e).attr('data-id');
+				$("#answer_"+answerID).remove();
+			}
+		}
+</script>
 
 @endsection

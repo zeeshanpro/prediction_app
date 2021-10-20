@@ -9,6 +9,9 @@
 	margin: 10px !important;
 }
 </style>
+<?php
+	$attri = (isset($games->is_status) && $games->is_status == 2 ) ? "disabled" : "";
+?>
  <!-- Content Header (Page header) -->
  <section class="content-header">
     <div class="container-fluid">
@@ -36,14 +39,14 @@
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-		  <form action="{{ route('games.update',$games->id) }}" method="POST" enctype="multipart/form-data">		
+		  <form action="{{ (!empty($attri)) ? 'javascript:void(0)' : route('games.update',$games->id) }}" method="POST" enctype="multipart/form-data">		
 				@csrf
 				@method('PUT')
 				<div class="row">
 				  <div class="col-md-6" data-select2-id="29">
 					<div class="form-group">
 					  <label>Sports</label>
-					  <select class="form-control" style="width: 100%;" id="sportOpt" name="sport_id" required onchange="getChampionshipBySportID(this)">
+					  <select class="form-control" style="width: 100%;" id="sportOpt" name="sport_id" required onchange="getChampionshipBySportID(this)" >
 						<option value="">Select Sport</option>
 							@if(isset($sports) && !empty($sports))
 								@foreach($sports as $dt)
@@ -54,7 +57,7 @@
 					</div>
 					<div class="form-group">
 					  <label>Championships</label>
-					  <select class="form-control" style="width: 100%;" name="championship_id" required id="ChampionshipOpt">
+					  <select class="form-control" style="width: 100%;" name="championship_id" required id="ChampionshipOpt" >
 						<option value="">Select Championship</option>
 							@if(isset($championships) && !empty($championships))
 								@foreach($championships as $dt)
@@ -66,13 +69,13 @@
 
 					<div class="form-group clearfix">
 					  <div class="icheck-primary d-inline">
-						<input type="radio" id="single" name="type" {{ $games->type == 1 ? 'checked' : '' }} value="1">
+						<input type="radio" id="single" name="type" {{ $games->type == 1 ? 'checked' : '' }} value="1" >
 						<label for="single">
 						Single
 						</label>
 					  </div>
 					  <div class="icheck-primary d-inline">
-						<input type="radio" id="teams" name="type" {{ $games->type == 2 ? 'checked' : '' }} value="2">
+						<input type="radio" id="teams" name="type" {{ $games->type == 2 ? 'checked' : '' }} value="2" >
 						<label for="teams">
 						Team
 						</label>
@@ -93,7 +96,7 @@
 					
 					<div class="form-group" id="team2Div" style="{{ $games->type == 2 ? '' : 'display:none' }}">
 						<label>Team 2 Name</label>
-						<select class="form-control" style="width: 100%;" id="team2" name="team2id" onchange="getTeamOptions()">
+						<select class="form-control" style="width: 100%;" id="team2" name="team2id" onchange="getTeamOptions()" {{ $attri }} >
 						<option value="">Select Team</option>
 							@if(isset($teams) && !empty($teams))
 								@foreach($teams as $dt)
@@ -106,7 +109,7 @@
 					<div class="form-group">
 						<label>Game start date time</label>
 						<div class="input-group date" id="startdatetime" data-target-input="nearest">
-							<input type="text" class="form-control datetimepicker-input" name="startdatetime" data-target="#startdatetime" value="<?php echo date("m/d/Y H:i:s",strtotime($games->start_time));?>" required/>
+							<input type="text" class="form-control datetimepicker-input" name="startdatetime" data-target="#startdatetime" value="<?php echo date("m/d/Y H:i:s",strtotime($games->start_time));?>" required />
 							<div class="input-group-append" data-target="#startdatetime" data-toggle="datetimepicker">
 								<div class="input-group-text"><i class="fa fa-calendar"></i></div>
 							</div>
@@ -127,10 +130,22 @@
 						<div class="col-12">
 							<div class="form-group">
 								<label>Status</label>
-								<select class="form-control" style="width: 100%;" id="is_status" name="is_status" required >
-									<option value="">Select Status</option>
-									<option value="1" {{ $games->is_status  == 1 ? 'selected' : '' }} >Publish</option>
-									<option value="0" {{ $games->is_status  == 0 ? 'selected' : '' }} >Hide</option>
+								<select class="form-control" style="width: 100%;" id="is_status" name="is_status" required>
+									<?php
+										if($games->is_status == 2)
+										{
+									?>
+											<option value="2" {{ $games->is_status  == 2 ? 'selected' : '' }} >Completed</option>
+									<?php
+										}else{
+									?>
+											<option value="">Select Status</option>
+											<option value="1" {{ $games->is_status  == 1 ? 'selected' : '' }} >Publish</option>
+											<option value="0" {{ $games->is_status  == 0 ? 'selected' : '' }} >Hide</option>
+									<?php
+										}
+									?>
+									
 								  </select>
 							</div>
 						</div>
@@ -228,10 +243,14 @@
 					</div>
 					
 					<hr />
-					
-					<div class="form-group">
-						<button class="btn btn-primary btn-lg" type="submit" id="save-btn" />Save</button>
-					</div>
+					<?php
+						if(empty($attri))
+						{
+					?>
+							<div class="form-group">
+								<button class="btn btn-primary btn-lg" type="submit" id="save-btn" />Save</button>
+							</div>
+					<?php } ?>
 				  </div>
 				</div>
 				<!-- /.row -->
@@ -254,6 +273,10 @@
 		  var TeamHtml = "";
 		  function getTeamOptions( load = '' )
 		  {
+			  <?php if(!empty($attri)){ ?> 
+				  return false;
+			  <?php } ?>
+		
 			var team1Opt = '';
 			var team2Opt = '';
 			var selected = '';
@@ -295,6 +318,10 @@
 		  
           $('document').ready(function() {
 
+			<?php if(!empty($attri)){ ?> 
+				  $(":input").prop("disabled", true);
+			<?php } ?>
+			  
             //Date and time picker
             $('#startdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
             $('#enddatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
@@ -316,6 +343,10 @@
 		  
 		function getChampionshipBySportID(e)
 		{
+			<?php if(!empty($attri)){ ?> 
+				return false;
+			<?php } ?>	
+			
 			$("#ChampionshipOpt").html("");
 			var sportID = $(e).val();
 			if(sportID == '')
@@ -349,6 +380,10 @@
 
 		function addQuestion(e)
 		{
+			<?php if(!empty($attri)){ ?> 
+				return false;
+			<?php } ?>
+			
 			var Question_no = $(e).attr('data-Question_no');
 			var Next_Question_no = parseInt(Question_no) + 1;
 			var Perv_Question_no = parseInt(Question_no) - 1;
@@ -380,6 +415,10 @@
 		
 		function addAnswer(e)
 		{
+			<?php if(!empty($attri)){ ?> 
+				return false;
+			<?php } ?>
+			
 			var Question_no = $(e).attr('data-Question_no');
 			var Answer_no = $(e).attr('data-Answer_no');
 			var Next_Answer_no = parseInt(Answer_no) + 1;
@@ -405,6 +444,10 @@
 		
 		function removeAnswer(e)
 		{
+			<?php if(!empty($attri)){ ?> 
+				return false;
+			<?php } ?>
+			
 			var AnsID = $(e).attr('data-ansid');
 			if(AnsID !="")
 			{
@@ -448,6 +491,10 @@
 		
 		function removeQuestion(e)
 		{
+			<?php if(!empty($attri)){ ?> 
+				return false;
+			<?php } ?>
+			
 			var Qid = $(e).attr('data-qid');
 			if(Qid !="")
 			{
@@ -488,8 +535,9 @@
 				$("#QuestionDiv_"+questionID).remove();
 			}
 		}
-				
+		
 		getTeamOptions('load');
+		
         </script>
     @endpush
 @endonce

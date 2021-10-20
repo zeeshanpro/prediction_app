@@ -80,7 +80,9 @@ class GameController extends Controller
 		unset($data['trueAns']);
 		unset($data['startdatetime']);
 		unset($data['enddatetime']);
-				
+		
+		$data['is_allocate'] = 0;
+		
 		$gameID = Game::create($data)->id;
 		if(!empty($gameID) && !empty($questions) && !empty($points) && !empty($answers))
 		{

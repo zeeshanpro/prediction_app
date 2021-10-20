@@ -30,6 +30,7 @@ class Game extends Model
         'start_time',
         'end_time',
         'is_status',
+        'is_allocate',
         'created_by',
         'updated_by',
     ];

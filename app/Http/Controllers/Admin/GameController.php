@@ -12,6 +12,7 @@ use App\Models\Question;
 use App\Models\Answer;
 use Carbon\Carbon;
 use Auth;
+use Throwable;
 
 class GameController extends Controller
 {
@@ -102,7 +103,8 @@ class GameController extends Controller
 								$answerData['points'] 		= trim($points[$i][$k]);
 								$answerData['answer'] 		= trim($answers[$i][$k]);
 								$answerData['team_id'] 		= trim($teams[$i][$k]);
-								$answerData['is_true'] 		= (isset($trueAns[$i][$k+1])) ? 1 : 0;
+								//$answerData['is_true'] 		= (isset($trueAns[$i][$k+1])) ? 1 : 0;
+								$answerData['is_true'] 		= 0;
 								$answerData['created_by'] 	= Auth::user()->id;
 								$answerData['updated_by'] 	= Auth::user()->id;
 								$answerID = Answer::create($answerData)->id;
@@ -278,5 +280,36 @@ class GameController extends Controller
     public function destroy($id)
     {
         //
+    }
+	
+	public function removeQuestionById()
+    {
+        $Qid 	= (isset($_POST['Qid']) && !empty($_POST['Qid'])) ? $_POST['Qid'] : false;
+		if(!empty($Qid))
+		{
+			try{
+				Answer::where("question_id",$Qid)->delete();
+				Question::where("id",$Qid)->delete();
+				return response()->json(array('status' => true , 'message'=> "Question successfully Deleted"), 200);
+			}catch (\Throwable $th) {
+				return response()->json(['success' => false, 'message' => 'Question Not found', 'errors' => $th->getMessage()]);
+			}
+			
+		}
+    }
+	
+	public function removeAnswerById()
+    {
+        $AnsID 	= (isset($_POST['AnsID']) && !empty($_POST['AnsID'])) ? $_POST['AnsID'] : false;
+		if(!empty($AnsID))
+		{
+			try{
+				Answer::where("id",$AnsID)->delete();
+				return response()->json(array('status' => true , 'message'=> "Answer successfully Deleted"), 200);
+			}catch (\Throwable $th) {
+				return response()->json(['success' => false, 'message' => 'Answer Not found', 'errors' => $th->getMessage()]);
+			}
+			
+		}
     }
 }

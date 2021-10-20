@@ -408,7 +408,36 @@
 			var AnsID = $(e).attr('data-ansid');
 			if(AnsID !="")
 			{
-				alert(AnsID);
+				if (confirm('Do you want to this answer?')) {
+					$.ajaxSetup({
+						headers: {
+							'X-CSRF-TOKEN': "{{ csrf_token() }}"
+						}
+					});
+					
+					var type = "POST";
+					var ajaxurl = '/admin/games/removeAnswerById';
+					$.ajax({
+						type: type,
+						url: ajaxurl,
+						data: {"AnsID" : AnsID },
+						dataType: 'json',
+						success: function (data) {
+							if(data.status)
+							{
+								alert(data.message);
+								location.reload();
+							}
+							else
+							{
+								alert("There is a prediction of user against this answer, So can't update this answer");
+							}
+						},
+						error: function (data) {
+			
+						}
+					});
+				}
 			}
 			else
 			{
@@ -422,7 +451,36 @@
 			var Qid = $(e).attr('data-qid');
 			if(Qid !="")
 			{
-				alert(Qid);
+				if (confirm('Do you want to this question?')) {
+					$.ajaxSetup({
+						headers: {
+							'X-CSRF-TOKEN': "{{ csrf_token() }}"
+						}
+					});
+					
+					var type = "POST";
+					var ajaxurl = '/admin/games/removeQuestionById';
+					$.ajax({
+						type: type,
+						url: ajaxurl,
+						data: {"Qid" : Qid },
+						dataType: 'json',
+						success: function (data) {
+							if(data.status)
+							{
+								alert(data.message);
+								location.reload();
+							}
+							else
+							{
+								alert("There is a prediction of user against this question, So can't update this question");
+							}
+						},
+						error: function (data) {
+			
+						}
+					});
+				}
 			}
 			else
 			{

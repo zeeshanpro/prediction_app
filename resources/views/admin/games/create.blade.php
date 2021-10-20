@@ -6,7 +6,8 @@
 	margin-top:10px !important;
 }
 .trueAnschk{
-	margin: 10px !important;
+	display:none;
+	//margin: 10px !important;
 }
 </style>
  <!-- Content Header (Page header) -->

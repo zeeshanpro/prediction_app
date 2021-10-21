@@ -72,7 +72,7 @@
 								if($dt->end_time <= date("Y-m-d H:i:s")){
 									if($dt->is_allocate == 0){
 							?>
-										| <a href="javascript:void(0)" onclick="allocateReward(this)" data-id="{{ $dt->id }}">Allocate Reward</a>
+										| <a href="javascript:void(0)" onclick="allocateReward(this)" data-id="{{ $dt->id }}">Finalize</a>
 							<?php	
 									}
 								}

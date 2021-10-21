@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Game;
+use App\Models\Prediction;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -84,4 +86,48 @@ class UserController extends Controller
     {
         //
     }
+	
+	public function userDetail($id)
+    {
+		$data = array();
+        $user = User::where(['id' => $id])->first();
+		if(!empty($user) && isset($user->id))
+		{
+			$playedGames	 	= count(Prediction::where(['userid' => $user->id])->groupBy('game_id')->get(['game_id']));
+			$completeGames		= count(Prediction::where(['predictions.userid' => $user->id,'games.is_status' => 2])
+									->join('games','games.id','=','predictions.game_id')
+									->groupBy('game_id')
+									->get(['game_id']));
+			$pendingGames 		= $playedGames - $completeGames ;
+			
+			$totalPrediction 	= Prediction::where(['userid' => $user->id])->count();					
+			$winPrediction 		= Prediction::where(['userid' => $user->id,'is_true' => 1])->count();
+			
+			$completePrediction = Prediction::where(['predictions.userid' => $user->id,'games.is_status' => 2])
+								->join('games','games.id','=','predictions.game_id')
+								->count();
+								
+			$losePrediction 	= $completePrediction - $winPrediction;
+			$pendingPrediction 	= $totalPrediction - $completePrediction;
+			
+			$winRate = 0;
+			if(!empty($completePrediction))
+				$winRate = round(( $winPrediction / $completePrediction) * 100,2)."%";
+			
+			
+			$data['user'] 				= $user;
+			$data['totalPrediction'] 	= $totalPrediction;
+			$data['completePrediction'] = $completePrediction;
+			$data['winPrediction'] 		= $winPrediction;
+			$data['losePrediction'] 	= $losePrediction;
+			$data['pendingPrediction'] 	= $pendingPrediction;
+			$data['winRate'] 			= $winRate;
+			$data['playedGames'] 		= $playedGames;
+			$data['completeGames'] 		= $completeGames;
+			$data['pendingGames'] 		= $pendingGames;
+			
+			return view('admin.users.show',$data);
+		}
+    }
+	
 }

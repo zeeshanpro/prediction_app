@@ -240,7 +240,7 @@
             </p>
           </a>
         </li>
-        <li class="nav-item {{ Request::segment(2) == 'users' ? 'activeLi' : '' }}">
+        <li class="nav-item {{ Request::segment(2) == 'users' || Request::segment(2) == 'userDetail' ? 'activeLi' : '' }}">
           <a href="{{ route('users') }}" class="nav-link">
             <i class="nav-icon fas fa-users"></i>
             <p>

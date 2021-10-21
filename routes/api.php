@@ -8,6 +8,7 @@ use App\Http\Controllers\api\v1\SportController;
 use App\Http\Controllers\api\v1\ChampionshipController;
 use App\Http\Controllers\api\v1\GameController;
 use App\Http\Controllers\api\v1\PredictionController;
+use App\Http\Controllers\api\v1\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,7 @@ Route::get('getChampionshipsBySportID/{sport_id}', [ChampionshipController::clas
 Route::get('getGamesByChampionshipID/{championship_id}', [GameController::class,'getGamesByChampionshipID'])->name('getGamesByChampionshipID');
 
 Route::post('savePrediction', [PredictionController::class,'savePrediction'])->name('savePrediction');
+Route::get('getUsersDetails/{user_id}', [UserController::class,'getUsersDetails'])->name('getUsersDetails');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

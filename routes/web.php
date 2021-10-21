@@ -32,6 +32,7 @@ Route::group(['middleware' => ['auth'] ] , function (){
 
 Route::group( ['prefix' => 'admin','middleware' => ['auth'] ] , function (){	
 	Route::get('users',[App\Http\Controllers\Admin\UserController::class,'index'])->name('users');
+	Route::get('userDetail/{id}', 'App\Http\Controllers\Admin\UserController@userDetail')->name('userDetail');
 	Route::resource('sports',App\Http\Controllers\Admin\SportController::class);
 	Route::resource('championships',App\Http\Controllers\Admin\ChampionshipController::class);
 	Route::resource('teams',App\Http\Controllers\Admin\TeamController::class);

@@ -127,7 +127,12 @@ class GameController extends BaseController
 		
 		try{
 			$today 				= date("Y-m-d H:i:s");
-			$games 				= Game::where([ 'championship_id' => $id , 'is_status' => 1 ])->where("end_time" ,">=" ,$today)->latest('games.created_at')->get();
+			$games 				= Game::where([ 'championship_id' => $id , 'games.is_status' => 1 ])
+                                    ->join('championships','championships.id','=','games.championship_id')
+                                    ->join('teams as t1','t1.id','=','games.team1id')
+                                    ->join('teams as t2','t2.id','=','games.team2id')
+                                    ->select('games.id','sport_id','championship_id','team1id','team2id','championships.name as championship','t1.name as team1_name','t2.name as team2_name','t1.logo as team1_logo','t2.logo as team2_logo','start_time','end_time')
+                                    ->where("end_time" ,">=" ,$today)->latest('games.created_at')->get();
 			$data['games'] 		= $games;
 			$data['logopath'] 	= asset('/uploads/');
 			return $this->sendResponse($data, 'Games found successfully.');

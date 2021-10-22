@@ -6,12 +6,12 @@
     <div class="container-fluid">
     <div class="row mb-2">
         <div class="col-sm-6">
-        <h1>Add Sport</h1>
+        <h1>Add Team</h1>
         </div>
         <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Add Sport</li>
+            <li class="breadcrumb-item active">Add Team</li>
         </ol>
         </div>
     </div>
@@ -26,11 +26,11 @@
         <div class="col-12">
         <div class="card">
             <div class="card-header">
-            <h3 class="card-title">Add Sport</h3>
+            <h3 class="card-title">Add Team</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-				<form action="{{ route('sports.store')}}" method="POST" enctype="multipart/form-data">
+				<form action="{{ route('teams.store')}}" method="POST" enctype="multipart/form-data">
 					
 					@csrf
 					

@@ -22,7 +22,9 @@ class SportController extends BaseController
 			if($sports->isEmpty()){
 				return $this->sendError('No sports found');
 			}
-			return $this->sendResponse($sports, 'All sports.');
+			$data['sports'] 	= $sports;
+			$data['logopath'] 	= asset('/uploads/');
+			return $this->sendResponse($data, 'All sports.');
 		}
         catch (\Throwable $th) {
             return response()->json(['success' => false, 'message' => 'Sports Not found', 'errors' => $th->getMessage()]);
@@ -65,9 +67,11 @@ class SportController extends BaseController
     public function show($id)
     {
 		try{
-			$sports = Sport::where('id',$id)->first();
-			$sucess['sports'] = $sports; 
-			$success['Championships'] = $sports->championships;
+			$sports 			= Sport::where('id',$id)->first();
+			$sucess['sports']	= $sports; 
+			$championships 		= $sports->championships;
+			$sucess['logopath'] = asset('/uploads/');
+			
 			return $this->sendResponse($sucess, 'Sports found successfully.');
 		}
         catch (\Throwable $th) {

@@ -18,6 +18,8 @@ class Championship extends Model
     protected $fillable = [
         'name',
         'sports_id',
+        'logo',
+        'is_status',
     ];
 
     public function sport()

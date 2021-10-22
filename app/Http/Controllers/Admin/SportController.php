@@ -15,7 +15,6 @@ class SportController extends Controller
      */
     public function index()
     {
-        
         $sports = Sport::all();
         return view('admin.sports.index',['sports' => $sports]);
     }
@@ -39,10 +38,25 @@ class SportController extends Controller
     public function store(Request $request)
     {
         Request()->validate([
-			'name' => 'required'
+			'name' => 'required',
+			'logo' => 'required',
 		]);
 		
-		$input = $request->all();
+		$input 				= $request->all();
+		
+		$Logo_name  = '';
+		$Logo_unique_name = '';
+		if($request->hasFile('logo'))
+		{
+			$fileobj				= $request->file('logo');
+			$Logo_name 				= $fileobj->getClientOriginalName('logo');
+			$Logo_extension_name 	= $fileobj->getClientOriginalExtension('logo');
+			$Logo_unique_name 		= time().rand(1000,9999).'.'.$Logo_extension_name;
+			$destinationPath		= public_path('/uploads/');
+			$fileobj->move($destinationPath,$Logo_unique_name);
+		}
+
+		$input['logo'] 	= $Logo_unique_name;		
 		Sport::create($input);
 		
 		return redirect()->route('sports.index')->with('success','Sport Successfully Created.' );
@@ -56,7 +70,7 @@ class SportController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
@@ -67,7 +81,8 @@ class SportController extends Controller
      */
     public function edit($id)
     {
-        //
+		$sport = Sport::find($id);
+		return view('admin.sports.edit',[ 'sport' => $sport ]);
     }
 
     /**
@@ -79,7 +94,31 @@ class SportController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        Request()->validate([
+			'name' => 'required',
+		]);
+		
+		$input 				= $request->all();
+		
+		$Logo_name  = '';
+		$Logo_unique_name = '';
+		if($request->hasFile('logo'))
+		{
+			$fileobj				= $request->file('logo');
+			$Logo_name 				= $fileobj->getClientOriginalName('logo');
+			$Logo_extension_name 	= $fileobj->getClientOriginalExtension('logo');
+			$Logo_unique_name 		= time().rand(1000,9999).'.'.$Logo_extension_name;
+			$destinationPath		= public_path('/uploads/');
+			$fileobj->move($destinationPath,$Logo_unique_name);
+			$input['logo'] 	= $Logo_unique_name;
+		}
+				
+		unset($input['_token']);
+		unset($input['_method']);
+		
+		Sport::where( ['id' => $id ] )->update($input);
+		
+		return redirect()->route('sports.index')->with('success','Sport Successfully Updated.' );
     }
 
     /**

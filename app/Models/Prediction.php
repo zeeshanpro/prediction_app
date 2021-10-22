@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Answer extends Model
+class Prediction extends Model
 {
     use HasFactory;
 
@@ -15,15 +15,12 @@ class Answer extends Model
      * @var string[]
      */
     protected $fillable = [
+        'userid',
         'game_id',
-        'question_id',
-        'answer',
-		'points',
-		'team_id',
+        'answerid',
+        'credit',
 		'is_true',
-        'created_by',
-        'updated_by',
+		'gain_credit'
     ];
-
 }
 

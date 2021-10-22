@@ -7,10 +7,13 @@ use Illuminate\Http\Request;
 use App\Models\Game;
 use App\Models\Sport;
 use App\Models\Championship;
+use App\Models\Team;
 use App\Models\Question;
 use App\Models\Answer;
+use App\Models\Prediction;
 use Carbon\Carbon;
 use Auth;
+use Throwable;
 
 class GameController extends Controller
 {
@@ -21,7 +24,8 @@ class GameController extends Controller
      */
     public function index()
     {
-        return view('admin.games.index');
+		$games = Game::all();
+        return view('admin.games.index',[ 'games' => $games ]);
     }
 
     /**
@@ -31,8 +35,9 @@ class GameController extends Controller
      */
     public function create()
     {
-		$data['sports'] = Sport::all();
-		$data['championships'] = Championship::all();
+		$data['sports'] = Sport::where("is_status",1)->get();
+		$data['championships'] = Championship::where("is_status",1)->get();
+		$data['teams'] = Team::where("is_status",1)->get();
         return view('admin.games.create',[ 'data' => $data]);
     }
 
@@ -48,55 +53,38 @@ class GameController extends Controller
 			'sport_id' => 'required|integer|exists:sports,id',
 			'championship_id' => 'required|integer|exists:championships,id',
 			'type' => 'required|integer',
-			'team1' => 'required',
+			'team1id' => 'required|integer|exists:teams,id',
 			'startdatetime' => 'required',
 			'enddatetime' => 'required',
 		]);
 		
         $data = $request->all();
-
-		$team1Logo_name  = '';
-		$team1Logo_unique_name = '';
-		if($request->hasFile('team1Logo'))
-		{
-			$team1fileobj				= $request->file('team1Logo');
-			$team1Logo_name 			= $team1fileobj->getClientOriginalName('team1Logo');
-			$team1Logo_extension_name 	= $team1fileobj->getClientOriginalExtension('team1Logo');
-			$team1Logo_unique_name 		= time().rand(1000,9999).'.'.$team1Logo_extension_name;
-			$destinationPath			= public_path('/uploads/');
-			$team1fileobj->move($destinationPath,$team1Logo_unique_name);
-		}
-
-		$data['team1Logo'] 	= $team1Logo_unique_name;
-
-		$team2Logo_name  = '';
-		$team2Logo_unique_name = '';
-		if($request->hasFile('team2Logo'))
-		{
-			$team2fileobj				= $request->file('team2Logo');
-			$team2Logo_name 			= $team2fileobj->getClientOriginalName('team2Logo');
-			$team2Logo_extension_name 	= $team2fileobj->getClientOriginalExtension('team2Logo');
-			$team2Logo_unique_name 		= time().rand(1000,9999).'.'.$team2Logo_extension_name;
-			$destinationPath			= public_path('/uploads/');
-			$team2fileobj->move($destinationPath,$team2Logo_unique_name);
-		}
-
-		$data['team2Logo'] 	= $team2Logo_unique_name;
+		//dd($data);
 		
-		$data['start_time'] 	= Carbon::parse($data['startdatetime'])->format('Y-m-d H:i:s');
+		$data['start_time'] = Carbon::parse($data['startdatetime'])->format('Y-m-d H:i:s');
 		$data['end_time'] 	= Carbon::parse($data['enddatetime'])->format('Y-m-d H:i:s');
 		
 		$data['created_by'] = Auth::user()->id;
 		$data['updated_by'] = Auth::user()->id;
 		
 		$questions 	= (isset($data['questions'])) ? $data['questions'] : false;
+		$points 	= (isset($data['points'])) ? $data['points'] : false;
 		$answers 	= (isset($data['answers'])) ? $data['answers'] : false;
+		$teams 		= (isset($data['teams'])) ? $data['teams'] : false;
+		$trueAns 	= (isset($data['trueAns'])) ? $data['trueAns'] : false;
 		
 		unset($data['questions']);
+		unset($data['points']);
 		unset($data['answers']);
+		unset($data['teams']);
+		unset($data['trueAns']);
+		unset($data['startdatetime']);
+		unset($data['enddatetime']);
+		
+		$data['is_allocate'] = 0;
 		
 		$gameID = Game::create($data)->id;
-		if(!empty($gameID) && !empty($questions) && !empty($answers))
+		if(!empty($gameID) && !empty($questions) && !empty($points) && !empty($answers))
 		{
 			foreach($questions as $i => $question)
 			{
@@ -115,7 +103,11 @@ class GameController extends Controller
 							{
 								$answerData['game_id'] 		= $gameID;
 								$answerData['question_id'] 	= $questionID;
+								$answerData['points'] 		= trim($points[$i][$k]);
 								$answerData['answer'] 		= trim($answers[$i][$k]);
+								$answerData['team_id'] 		= trim($teams[$i][$k]);
+								//$answerData['is_true'] 		= (isset($trueAns[$i][$k+1])) ? 1 : 0;
+								$answerData['is_true'] 		= 0;
 								$answerData['created_by'] 	= Auth::user()->id;
 								$answerData['updated_by'] 	= Auth::user()->id;
 								$answerID = Answer::create($answerData)->id;
@@ -147,8 +139,31 @@ class GameController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
-        //
+    {	
+		$games 	= Game::where('id',$id)->first();
+		$data 	= array();
+		if(!empty($games) && !empty($games->id))
+		{
+			$data['sports'] 		= Sport::where("is_status",1)->get();
+			$data['championships'] 	= Championship::where(["sports_id" => $games->sport_id , "is_status" => 1])->get();
+			$data['teams'] 			= Team::where("is_status",1)->get();
+						
+			$questions 				= $games->questions;
+			$answers 				= $games->answers;
+			$data['games'] 			= $games; 
+			
+			$selectteams = [];
+			
+			if(!empty($games->team1id))
+				$selectteams[] = Team::where([ "id" => $games->team1id ,"is_status" => 1 ])->first();
+			if(!empty($games->team2id))
+				$selectteams[] = Team::where([ "id" => $games->team2id ,"is_status" => 1 ])->first();
+			
+			$data['selectteams'] = $selectteams;
+			
+		}
+		
+		return view('admin.games.edit',$data);
     }
 
     /**
@@ -160,7 +175,103 @@ class GameController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+		if(empty($id))
+			return redirect()->route('games.index')->with("error","something went wrong");
+		
+        Request()->validate([
+			'sport_id' => 'required|integer|exists:sports,id',
+			'championship_id' => 'required|integer|exists:championships,id',
+			'type' => 'required|integer',
+			'team1id' => 'required|integer|exists:teams,id',
+			'startdatetime' => 'required',
+			'enddatetime' => 'required',
+		]);
+		
+        $data = $request->all();
+		//dd($data);
+
+		$data['start_time'] = Carbon::parse($data['startdatetime'])->format('Y-m-d H:i:s');
+		$data['end_time'] 	= Carbon::parse($data['enddatetime'])->format('Y-m-d H:i:s');
+		
+		$data['updated_by'] = Auth::user()->id;
+		
+		$questionids 	= (isset($data['questionids'])) ? $data['questionids'] : false;
+		$questions 		= (isset($data['questions'])) ? $data['questions'] : false;
+		$answers 		= (isset($data['answers'])) ? $data['answers'] : false;
+		$answerids 		= (isset($data['answerids'])) ? $data['answerids'] : false;
+		$points 		= (isset($data['points'])) ? $data['points'] : false;
+		$teams 			= (isset($data['teams'])) ? $data['teams'] : false;
+		$trueAns 		= (isset($data['trueAns'])) ? $data['trueAns'] : false;
+		
+		unset($data['questions']);
+		unset($data['questionids']);
+		unset($data['answers']);
+		unset($data['answerids']);
+		unset($data['points']);
+		unset($data['teams']);
+		unset($data['trueAns']);
+		unset($data['_token']);
+		unset($data['_method']);
+		unset($data['startdatetime']);
+		unset($data['enddatetime']);
+		
+		$gameID = $id;
+		Game::where([ 'id' => $gameID ])->update($data);
+		
+		if(!empty($gameID) && !empty($questions) && !empty($points) && !empty($answers))
+		{
+			foreach($questions as $i => $question)
+			{
+				$questionData = [];
+				if(isset($questions[$i]) && !empty($questions[$i]))
+				{
+					$questionData['question'] 	= trim($question);
+					$questionData['updated_by'] = Auth::user()->id;
+					if(!empty($questionids) && isset($questionids[$i]) && !empty($questionids[$i]))
+					{
+						$questionID = $questionids[$i];
+						Question::where( [ "id" => $questionID ] )->update($questionData);
+					}
+					else
+					{
+						$questionData['game_id'] 	= $gameID;
+						$questionData['created_by'] = Auth::user()->id;
+						$questionID = Question::create($questionData)->id;
+					}
+						
+					if(!empty($questionID) && isset($answers[$i]) && !empty($answers[$i]))
+					{
+						for($k=0;$k<count($answers[$i]);$k++)
+						{
+							$answerData = [];
+							if(isset($answers[$i][$k]) && !empty($answers[$i][$k]))
+							{
+								$answerData['points'] 		= trim($points[$i][$k]);
+								$answerData['answer'] 		= trim($answers[$i][$k]);
+								$answerData['team_id'] 		= trim($teams[$i][$k]);
+								$answerData['is_true'] 		= (isset($trueAns[$i][$k+1])) ? 1 : 0;
+								$answerData['updated_by'] 	= Auth::user()->id;
+								
+								if(!empty($answerids) && isset($answerids[$i][$k]) && !empty($answerids[$i][$k]))
+								{
+									$answerID = $answerids[$i][$k];
+									Answer::where( [ "id" => $answerID ] )->update($answerData);
+								}
+								else
+								{
+									$answerData['game_id'] 		= $gameID;
+									$answerData['question_id'] 	= $questionID;
+									$answerData['created_by'] = Auth::user()->id;
+									$answerID = Answer::create($answerData)->id;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return redirect()->route('games.index')->with("success","Game Successfully Updated.");
     }
 
     /**
@@ -172,5 +283,71 @@ class GameController extends Controller
     public function destroy($id)
     {
         //
+    }
+	
+	public function removeQuestionById()
+    {
+        $Qid 	= (isset($_POST['Qid']) && !empty($_POST['Qid'])) ? $_POST['Qid'] : false;
+		if(!empty($Qid))
+		{
+			try{
+				Answer::where("question_id",$Qid)->delete();
+				Question::where("id",$Qid)->delete();
+				return response()->json(array('status' => true , 'message'=> "Question successfully Deleted"), 200);
+			}catch (\Throwable $th) {
+				return response()->json(['success' => false, 'message' => 'Question Not found', 'errors' => $th->getMessage()]);
+			}
+			
+		}
+    }
+	
+	public function removeAnswerById()
+    {
+        $AnsID 	= (isset($_POST['AnsID']) && !empty($_POST['AnsID'])) ? $_POST['AnsID'] : false;
+		if(!empty($AnsID))
+		{
+			try{
+				Answer::where("id",$AnsID)->delete();
+				return response()->json(array('status' => true , 'message'=> "Answer successfully Deleted"), 200);
+			}catch (\Throwable $th) {
+				return response()->json(['success' => false, 'message' => 'Answer Not found', 'errors' => $th->getMessage()]);
+			}
+			
+		}
+    }
+	
+	public function allocateRewardByGameID()
+    {
+        $gameID = (isset($_POST['gameID']) && !empty($_POST['gameID'])) ? $_POST['gameID'] : false;
+		if(!empty($gameID))
+		{
+			try{
+				$answerData = Answer::where(["game_id" => $gameID , "is_true" => 1 ])->get();
+				if(!empty($answerData))
+				{
+					foreach($answerData as $answer)
+					{
+						$where["game_id"] = $gameID;
+						$where["answerid"] = $answer->id;
+						$predictionData = Prediction::where($where)->get();
+						if(!empty($predictionData))
+						{
+							foreach($predictionData as $prediction)
+							{
+								$updateArray['is_true'] 	= 1;
+								$updateArray['gain_credit'] = ( $prediction->credit * $answer->points );
+								Prediction::where($where)->update($updateArray);
+							}
+						}
+					}
+					
+					Game::where([ "id" => $gameID])->update(array( "is_allocate" => 1 , "is_status" =>  2 ));
+				}
+				return response()->json(array('status' => true , 'message'=> "Credit successfully allocated"), 200);
+			}catch (\Throwable $th) {
+				return response()->json(['success' => false, 'message' => 'something went wrong', 'errors' => $th->getMessage()]);
+			}
+			
+		}
     }
 }

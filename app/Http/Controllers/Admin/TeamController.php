@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Sport;
-use App\Models\Championship;
+use App\Models\Team;
 use Illuminate\Http\Request;
+use Auth;
 
-class ChampionshipController extends Controller
+class TeamController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,8 @@ class ChampionshipController extends Controller
      */
     public function index()
     {
-        $championships = Championship::all();
-        return view('admin.championships.index',['championships' => $championships]);
+        $teams = Team::all();
+        return view('admin.teams.index',['teams' => $teams]);
     }
 
     /**
@@ -27,8 +27,7 @@ class ChampionshipController extends Controller
      */
     public function create()
     {
-		$sports = Sport::where("is_status",1)->get();
-        return view('admin.championships.create',['sports' => $sports]);
+        return view('admin.teams.create');
     }
 
     /**
@@ -41,11 +40,10 @@ class ChampionshipController extends Controller
     {
         Request()->validate([
 			'name' => 'required',
-			'sports_id' => 'required|integer|exists:sports,id',
 			'logo' => 'required',
 		]);
 		
-		$input = $request->all();
+		$input 				= $request->all();
 		
 		$Logo_name  = '';
 		$Logo_unique_name = '';
@@ -59,10 +57,13 @@ class ChampionshipController extends Controller
 			$fileobj->move($destinationPath,$Logo_unique_name);
 		}
 
-		$input['logo'] 	= $Logo_unique_name;
-		Championship::create($input);
+		$input['logo'] 	= $Logo_unique_name;	
+		$input['created_by'] = Auth::user()->id;
+		$input['updated_by'] = Auth::user()->id;
 		
-		return redirect()->route('championships.index')->with( 'success','Championship Successfully Created.' );
+		Team::create($input);
+		
+		return redirect()->route('teams.index')->with('success','Team Successfully Created.' );
     }
 
     /**
@@ -73,7 +74,7 @@ class ChampionshipController extends Controller
      */
     public function show($id)
     {
-        
+
     }
 
     /**
@@ -84,9 +85,8 @@ class ChampionshipController extends Controller
      */
     public function edit($id)
     {
-        $championship = Championship::find($id);
-		$sports = Sport::where("is_status",1)->get();
-		return view('admin.championships.edit',[ 'sports' => $sports , 'championship' => $championship ]);
+		$team = Team::find($id);
+		return view('admin.teams.edit',[ 'team' => $team ]);
     }
 
     /**
@@ -100,10 +100,9 @@ class ChampionshipController extends Controller
     {
         Request()->validate([
 			'name' => 'required',
-			'sports_id' => 'required|integer|exists:sports,id',
 		]);
 		
-		$input = $request->all();
+		$input 				= $request->all();
 		
 		$Logo_name  = '';
 		$Logo_unique_name = '';
@@ -117,13 +116,16 @@ class ChampionshipController extends Controller
 			$fileobj->move($destinationPath,$Logo_unique_name);
 			$input['logo'] 	= $Logo_unique_name;
 		}
-
+				
 		unset($input['_token']);
 		unset($input['_method']);
 		
-		Championship::where([ 'id' => $id ])->update($input);
+		$input['created_by'] = Auth::user()->id;
+		$input['updated_by'] = Auth::user()->id;
 		
-		return redirect()->route('championships.index')->with( 'success','Championship Successfully Updated.' );
+		Team::where( ['id' => $id ] )->update($input);
+		
+		return redirect()->route('teams.index')->with('success','Team Successfully Updated.' );
     }
 
     /**
@@ -136,29 +138,4 @@ class ChampionshipController extends Controller
     {
         //
     }
-	
-	public function LoadChampionshipListBySportID()
-	{
-		$sportID 	= (isset($_POST['sportID']) && !empty($_POST['sportID'])) ? $_POST['sportID'] : false;
-		if(!empty($sportID))
-		{
-			$Filterdata = Championship::where("sports_id",$sportID)
-					->where("is_status",1)
-					->latest('championships.created_at')
-					->get(['championships.*']);
-					
-			$html = '<option value="">Select Championship</option>';
-			if(!empty($Filterdata->toArray()))
-			{
-				$i = 0;
-				foreach($Filterdata as $index => $filter)
-				{
-					$i++;	
-					$html .= '<option value="'.$filter->id.'">'.$filter->name.'</option>';
-				}
-			}
-			return response()->json(array('html'=> $html), 200);
-		}
-	}
-
 }

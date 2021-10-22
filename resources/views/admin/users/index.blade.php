@@ -32,30 +32,39 @@
             <div class="card-body">
             <table id="example1" class="table table-bordered table-striped">
                 <thead>
-                <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Created Date</th>
-                </tr>
+					<tr>
+						<th>Sr #</th>
+						<th>Name</th>
+						<th>Email</th>
+						<th>Created Date</th>
+						<th>Action</th>
+					</tr>
                 </thead>
                 <tbody>
-                @foreach($users as $user)
-                <tr>
-               
-                
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>{{ $user->created_at }}</td>
-                    
-                </tr>
-                @endforeach
+				<?php
+					$i = 0;
+					foreach($users as $user):
+						$i++;
+				?>
+					<tr>
+						<td>{{ $i }}</td>
+						<td>{{ $user->name }}</td>
+						<td>{{ $user->email }}</td>
+						<td>{{ $user->created_at }}</td>
+						<td><a href="{{ route('userDetail',$user->id) }}">Details</a></td>
+					</tr>
+				<?php
+					endforeach;
+				?>
                 </tbody>
                 <tfoot>
-                <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Created Date</th>
-                </tr>
+					<tr>
+						<th>Sr #</th>
+						<th>Name</th>
+						<th>Email</th>
+						<th>Created Date</th>
+						<th>Action</th>
+					</tr>
                 </tfoot>
             </table>
             </div>

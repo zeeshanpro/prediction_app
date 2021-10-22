@@ -6,12 +6,12 @@
     <div class="container-fluid">
     <div class="row mb-2">
         <div class="col-sm-6">
-        <h1>Championships</h1>
+        <h1>Teams</h1>
         </div>
         <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Championships</li>
+            <li class="breadcrumb-item active">Teams</li>
         </ol>
         </div>
     </div>
@@ -23,7 +23,7 @@
  <section class="content">
     <div class="container-fluid">
     <div class="row">
-		
+	
 		@if($message = Session::get('success'))
 			<div class="alert alert-success">
 				<p> {{ $message }} </p>
@@ -33,7 +33,7 @@
         <div class="col-12">
         <div class="card">
             <div class="card-header">
-            <h3 class="card-title">Championships</h3>
+            <h3 class="card-title">Teams</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -42,7 +42,6 @@
 					<tr>
 						<th>ID</th>
 						<th>Name</th>
-						<th>Sports</th>
 						<th>Status</th>
 						<th>Logo</th>
 						<th>Created Date</th>
@@ -50,26 +49,21 @@
 					</tr>
                 </thead>
                 <tbody>
-                @foreach($championships as $dt)
+                @foreach($teams as $dt)
                 <tr>
-               
-                
                     <td>{{ $dt->id }}</td>
                     <td>{{ $dt->name }}</td>
-                    <td>{{ $dt->sport->name }}</td>
                     <td><a href="{{ asset('/uploads/'.$dt->logo) }}" target="_blank">View</a></td>
                     <td>{{ ($dt->is_status == 1 ) ? 'Show' : 'Hide' }}</td>
                     <td>{{ $dt->created_at }}</td>
-                    <td><a href="{{ route('championships.edit',$dt->id) }}">Edit</a></td>
-                    
+                    <td><a href="{{ route('teams.edit',$dt->id) }}">Edit</a></td>
                 </tr>
                 @endforeach
                 </tbody>
                 <tfoot>
-                	<tr>
+					<tr>
 						<th>ID</th>
 						<th>Name</th>
-						<th>Sports</th>
 						<th>Status</th>
 						<th>Logo</th>
 						<th>Created Date</th>

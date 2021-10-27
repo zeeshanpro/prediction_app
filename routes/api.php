@@ -9,6 +9,7 @@ use App\Http\Controllers\api\v1\ChampionshipController;
 use App\Http\Controllers\api\v1\GameController;
 use App\Http\Controllers\api\v1\PredictionController;
 use App\Http\Controllers\api\v1\UserController;
+use App\Http\Controllers\api\v1\PaymentMethodController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,9 @@ Route::get('getGamesByChampionshipID/{championship_id}', [GameController::class,
 
 Route::post('savePrediction', [PredictionController::class,'savePrediction'])->name('savePrediction');
 Route::get('getUsersDetails/{user_id}', [UserController::class,'getUsersDetails'])->name('getUsersDetails');
+
+Route::resource('payment_methods', PaymentMethodController::class);
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

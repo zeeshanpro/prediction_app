@@ -332,7 +332,7 @@
             </p>
           </a>
           <ul class="nav nav-treeview">
-			<li class="nav-item {{ Request::segment(2) == 'games' && Request::segment(3) == '' ? 'activeLi' : '' }}">
+			      <li class="nav-item {{ Request::segment(2) == 'games' && Request::segment(3) == '' ? 'activeLi' : '' }}">
               <a href="{{ route('games.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>All Games</p>
@@ -346,7 +346,39 @@
             </li>
           </ul>
         </li> 
+        <li class="nav-item {{ Request::segment(2) == '' || Request::segment(2) == '' ? 'activeLi' : '' }}">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-users"></i>
+            <p>
+              Open Transactions
+              <!-- <span class="right badge badge-danger">New</span> -->
+            </p>
+          </a>
+        </li>
 
+        <li class="nav-item {{ Request::segment(2) == 'payment_method' ? 'menu-is-opening menu-open' : '' }} ">
+          <a href="javascript:void(0)" class="nav-link">
+            <i class="nav-icon fab fa-steam"></i>
+            <p>
+              Settings
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+			      <li class="nav-item {{ Request::segment(2) == 'payment_method' && Request::segment(3) == '' ? 'activeLi' : '' }}">
+              <a href="{{ route('payment_method.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Payment Methods</p>
+              </a>
+            </li>
+            <li class="nav-item {{ Request::segment(2) == 'payment_method' && Request::segment(3) == 'create' ? 'activeLi' : '' }}">
+              <a href="{{ route('payment_method.create') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Payment Method</p>
+              </a>
+            </li>
+          </ul>
+        </li>
       </ul>
     </nav>
     <!-- /.sidebar-menu -->

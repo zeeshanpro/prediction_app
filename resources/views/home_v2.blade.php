@@ -76,7 +76,7 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Open Transaction Requests</span>
-              <span class="info-box-number"></span>
+              <span class="info-box-number">{{ $withdrawPending }}</span>
             </div>
             <!-- /.info-box-content -->
           </div>
@@ -85,6 +85,35 @@
         <!-- /.col -->
       </div>
       <!-- /.row -->
+
+	  <div class="row">
+		<div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box mb-3">
+            <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Completed Transaction Requests</span>
+              <span class="info-box-number">{{ $withdrawCompleted }}</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+		
+		<div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box mb-3">
+            <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Total Transaction Requests</span>
+              <span class="info-box-number">{{ $withdrawTotal }}</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+		
+	  </div>
     </div><!--/. container-fluid -->
   </section>
   <!-- /.content -->

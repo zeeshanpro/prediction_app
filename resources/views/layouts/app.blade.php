@@ -346,14 +346,35 @@
             </li>
           </ul>
         </li> 
-        <li class="nav-item {{ Request::segment(2) == '' || Request::segment(2) == '' ? 'activeLi' : '' }}">
-          <a href="#" class="nav-link">
-            <i class="nav-icon fas fa-users"></i>
+		<?php $transType = (isset($_GET['trans'])) ? $_GET['trans'] : "";  ?>
+		<li class="nav-item {{ Request::segment(2) == 'withdraws' ? 'menu-is-opening menu-open' : '' }}">
+          <a href="javascript:void(0)" class="nav-link">
+            <i class="nav-icon fas fa-basketball-ball"></i>
             <p>
-              Open Transactions
-              <!-- <span class="right badge badge-danger">New</span> -->
+              Transactions
+              <i class="right fas fa-angle-left"></i>
             </p>
           </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item {{ Request::segment(2) == 'withdraws' && $transType == '' ? 'activeLi' : '' }}">
+              <a href="{{ route('withdraws.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Total</p>
+              </a>
+            </li>
+			<li class="nav-item {{ Request::segment(2) == 'withdraws' && $transType == 'open' ? 'activeLi' : '' }}">
+              <a href="{{ route('withdraws.index','trans=open') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Open</p>
+              </a>
+            </li>
+			<li class="nav-item {{ Request::segment(2) == 'withdraws' && $transType == 'completed' ? 'activeLi' : '' }}">
+              <a href="{{ route('withdraws.index','trans=completed') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Completed</p>
+              </a>
+            </li>
+          </ul>
         </li>
 
         <li class="nav-item {{ Request::segment(2) == 'payment_method' ? 'menu-is-opening menu-open' : '' }} ">

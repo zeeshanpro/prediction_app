@@ -38,6 +38,7 @@ Route::group( ['prefix' => 'admin','middleware' => ['auth'] ] , function (){
 	Route::resource('teams',App\Http\Controllers\Admin\TeamController::class);
 	Route::resource('games',App\Http\Controllers\Admin\GameController::class);
 	Route::resource('payment_method',App\Http\Controllers\Admin\PaymentMethodController::class);
+	Route::resource('withdraws',App\Http\Controllers\Admin\WithdrawController::class);
 	Route::post('championships/getChampionshipBySportID',[App\Http\Controllers\Admin\ChampionshipController::class,'LoadChampionshipListBySportID'])->name('getChampionshipBySportID');
 	Route::post('games/removeQuestionById',[App\Http\Controllers\Admin\GameController::class,'removeQuestionById'])->name('removeQuestionById');
 	Route::post('games/removeAnswerById',[App\Http\Controllers\Admin\GameController::class,'removeAnswerById'])->name('removeAnswerById');

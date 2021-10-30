@@ -11,6 +11,7 @@ use App\Http\Controllers\api\v1\PredictionController;
 use App\Http\Controllers\api\v1\UserController;
 use App\Http\Controllers\api\v1\PaymentMethodController;
 use App\Http\Controllers\api\v1\WithdrawController;
+use App\Http\Controllers\api\v1\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,8 @@ Route::get('getUsersDetails/{user_id}', [UserController::class,'getUsersDetails'
 Route::resource('payment_methods', PaymentMethodController::class);
 Route::post('requestForWithdraw', [WithdrawController::class,'requestForWithdraw'])->name('requestForWithdraw');
 Route::get('withdrawHistory/{user_id}', [WithdrawController::class,'withdrawHistory'])->name('withdrawHistory');
+
+Route::get('getNotifications', [NotificationController::class,'index'])->name('getNotifications');
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

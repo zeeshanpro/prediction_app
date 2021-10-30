@@ -23,6 +23,11 @@
  <section class="content">
     <div class="container-fluid">
     <div class="row">
+		@if($message = Session::get('success'))
+			<div class="alert alert-success">
+				<p> {{ $message }} </p>
+			</div>
+		@endif
         <div class="col-12">
         <div class="card">
             <div class="card-header">
@@ -58,7 +63,7 @@
 						<td>
 							<a href="{{ route('userDetail',$user->id) }}">Details</a> |
 							<a href="{{ route('userEdit',$user->id) }}">Edit</a> |
-							<a href="javascript:void(0)" onclick="deleteUser($user->id)">Delete</a>
+							<a href="javascript:void(0)" onclick="deleteUser({{$user->id}})">Delete</a>
 						</td>
 					</tr>
 				<?php
@@ -91,3 +96,46 @@
 <!-- /.content -->
 
 @endsection
+
+@once
+    @push('scripts')
+        <script>
+			function deleteUser(uid)
+			{
+				if(uid !="")
+				{
+					if (confirm('Do you want to this User?')) {
+						$.ajaxSetup({
+							headers: {
+								'X-CSRF-TOKEN': "{{ csrf_token() }}"
+							}
+						});
+						
+						var type = "POST";
+						var ajaxurl = '/admin/users/userDelete/'+uid;
+						$.ajax({
+							type: type,
+							url: ajaxurl,
+							dataType: 'json',
+							success: function (data) {
+								if(data.status)
+								{
+									alert(data.message);
+									location.reload();
+								}
+								else
+								{
+									alert("Something went wrong.");
+								}
+							},
+							error: function (data) {
+				
+							}
+						});
+					}
+				}
+			
+			}
+		</script>
+    @endpush
+@endonce

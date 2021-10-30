@@ -240,7 +240,7 @@
             </p>
           </a>
         </li>
-        <li class="nav-item {{ Request::segment(2) == 'users' || Request::segment(2) == 'userDetail' ? 'activeLi' : '' }}">
+        <li class="nav-item {{ Request::segment(2) == 'users' || Request::segment(2) == 'userDetail' || Request::segment(2) == 'userEdit' ? 'activeLi' : '' }}">
           <a href="{{ route('users') }}" class="nav-link">
             <i class="nav-icon fas fa-users"></i>
             <p>
@@ -400,6 +400,29 @@
             </li>
           </ul>
         </li>
+		<li class="nav-item {{ Request::segment(2) == 'notifications' ? 'menu-is-opening menu-open' : '' }} ">
+          <a href="javascript:void(0)" class="nav-link">
+            <i class="nav-icon fab fa-steam"></i>
+            <p>
+              Notifications
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+			      <li class="nav-item {{ Request::segment(2) == 'notifications' && Request::segment(3) == '' ? 'activeLi' : '' }}">
+              <a href="{{ route('notifications.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>All Notifications</p>
+              </a>
+            </li>
+            <li class="nav-item {{ Request::segment(2) == 'notifications' && Request::segment(3) == 'create' ? 'activeLi' : '' }}">
+              <a href="{{ route('notifications.create') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Notification</p>
+              </a>
+            </li>
+          </ul>
+        </li> 
       </ul>
     </nav>
     <!-- /.sidebar-menu -->

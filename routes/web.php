@@ -34,13 +34,15 @@ Route::group( ['prefix' => 'admin','middleware' => ['auth'] ] , function (){
 	Route::get('users',[App\Http\Controllers\Admin\UserController::class,'index'])->name('users');
 	Route::get('userDetail/{id}', 'App\Http\Controllers\Admin\UserController@userDetail')->name('userDetail');
 	Route::get('userEdit/{id}', 'App\Http\Controllers\Admin\UserController@edit')->name('userEdit');
-	Route::get('userUpdate/{id}', 'App\Http\Controllers\Admin\UserController@update')->name('userUpdate');
+	Route::post('userUpdate/{id}', 'App\Http\Controllers\Admin\UserController@update')->name('userUpdate');
+	Route::post('users/userDelete/{id}', 'App\Http\Controllers\Admin\UserController@destroy')->name('userDelete');
 	Route::resource('sports',App\Http\Controllers\Admin\SportController::class);
 	Route::resource('championships',App\Http\Controllers\Admin\ChampionshipController::class);
 	Route::resource('teams',App\Http\Controllers\Admin\TeamController::class);
 	Route::resource('games',App\Http\Controllers\Admin\GameController::class);
 	Route::resource('payment_method',App\Http\Controllers\Admin\PaymentMethodController::class);
 	Route::resource('withdraws',App\Http\Controllers\Admin\WithdrawController::class);
+	Route::resource('notifications',App\Http\Controllers\Admin\NotificationController::class);
 	Route::post('championships/getChampionshipBySportID',[App\Http\Controllers\Admin\ChampionshipController::class,'LoadChampionshipListBySportID'])->name('getChampionshipBySportID');
 	Route::post('games/removeQuestionById',[App\Http\Controllers\Admin\GameController::class,'removeQuestionById'])->name('removeQuestionById');
 	Route::post('games/removeAnswerById',[App\Http\Controllers\Admin\GameController::class,'removeAnswerById'])->name('removeAnswerById');

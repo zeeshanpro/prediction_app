@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Game;
 use App\Models\Prediction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -74,7 +75,21 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        Request()->validate([
+			'name' => 'required',
+		]);
+		
+		$input 				= $request->all();
+		
+		$data['name'] 		= $input['name']; 		
+		if(!empty($input['password']))
+			$data['password'] = Hash::make($input['password']); 		
+		
+		$data['is_status'] 	= $input['is_status']; 		
+		$data['credits'] 	= $input['credit']; 		
+		
+		User::where( ['id' => $id ] )->update($data);
+		return redirect()->route('users')->with('success','User Successfully Updated.' );
     }
 
     /**
@@ -85,7 +100,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        User::where( ['id' => $id ] )->delete();
+		return response()->json(array('status' => true , 'message'=> "User Successfully Deleted."), 200);
     }
 	
 	public function userDetail($id)

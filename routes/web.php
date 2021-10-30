@@ -33,6 +33,8 @@ Route::group(['middleware' => ['auth'] ] , function (){
 Route::group( ['prefix' => 'admin','middleware' => ['auth'] ] , function (){	
 	Route::get('users',[App\Http\Controllers\Admin\UserController::class,'index'])->name('users');
 	Route::get('userDetail/{id}', 'App\Http\Controllers\Admin\UserController@userDetail')->name('userDetail');
+	Route::get('userEdit/{id}', 'App\Http\Controllers\Admin\UserController@edit')->name('userEdit');
+	Route::get('userUpdate/{id}', 'App\Http\Controllers\Admin\UserController@update')->name('userUpdate');
 	Route::resource('sports',App\Http\Controllers\Admin\SportController::class);
 	Route::resource('championships',App\Http\Controllers\Admin\ChampionshipController::class);
 	Route::resource('teams',App\Http\Controllers\Admin\TeamController::class);

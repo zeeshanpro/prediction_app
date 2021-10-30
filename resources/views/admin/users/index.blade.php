@@ -36,6 +36,8 @@
 						<th>Sr #</th>
 						<th>Name</th>
 						<th>Email</th>
+						<th>Current Credit</th>
+						<th>Status</th>
 						<th>Created Date</th>
 						<th>Action</th>
 					</tr>
@@ -50,8 +52,14 @@
 						<td>{{ $i }}</td>
 						<td>{{ $user->name }}</td>
 						<td>{{ $user->email }}</td>
+						<td>{{ (!empty($user->credits)) ? $user->credits : 0 }}</td>
+						<td>{{ ($user->is_status == 1 ) ? 'Active' : 'Block' }}</td>
 						<td>{{ $user->created_at }}</td>
-						<td><a href="{{ route('userDetail',$user->id) }}">Details</a></td>
+						<td>
+							<a href="{{ route('userDetail',$user->id) }}">Details</a> |
+							<a href="{{ route('userEdit',$user->id) }}">Edit</a> |
+							<a href="javascript:void(0)" onclick="deleteUser($user->id)">Delete</a>
+						</td>
 					</tr>
 				<?php
 					endforeach;
@@ -62,6 +70,8 @@
 						<th>Sr #</th>
 						<th>Name</th>
 						<th>Email</th>
+						<th>Current Credit</th>
+						<th>Status</th>
 						<th>Created Date</th>
 						<th>Action</th>
 					</tr>

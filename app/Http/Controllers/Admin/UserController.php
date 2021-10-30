@@ -61,7 +61,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::where(['user_type' => 2, 'id' => $id ])->first();
+        return view('admin.users.edit',['user' => $user]);
     }
 
     /**

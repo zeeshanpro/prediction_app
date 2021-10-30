@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 // use Laravel\Sanctum\HasApiTokens;
 use Laravel\Passport\HasApiTokens;
 use App\Models\Prediction;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
@@ -24,7 +25,9 @@ class User extends Authenticatable
         'email',
         'password',
         'language',
-        'user_type'
+        'user_type',
+		'credits',
+		'is_status'
     ];
 
     /**

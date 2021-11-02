@@ -27,7 +27,7 @@ class PaymentMethodController extends BaseController
 			return $this->sendResponse($data, 'All payment methods.');
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Payment Methods Not found', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Payment Methods Not found', 'errors' => $th->getMessage()],401);
         }
     }
 

@@ -146,7 +146,7 @@ class PredictionController extends BaseController
 			}
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'something went wrong.', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'something went wrong.', 'errors' => $th->getMessage()],401);
         }
     }
 	

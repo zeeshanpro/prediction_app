@@ -32,7 +32,7 @@ class GameController extends BaseController
 			return $this->sendResponse($data, 'All games.');
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Games Not found', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Games Not found', 'errors' => $th->getMessage()],401);
         }
 		
         
@@ -85,7 +85,7 @@ class GameController extends BaseController
 			return $this->sendResponse($data, 'Games found successfully.');
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Game Not found', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Game Not found', 'errors' => $th->getMessage()],401);
         }
     }
 
@@ -138,7 +138,7 @@ class GameController extends BaseController
 			return $this->sendResponse($data, 'Games found successfully.');
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Game Not found.', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Game Not found.', 'errors' => $th->getMessage()],401);
         }
 		
     }

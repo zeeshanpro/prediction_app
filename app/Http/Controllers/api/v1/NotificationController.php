@@ -27,7 +27,7 @@ class NotificationController extends BaseController
 			return $this->sendResponse($data, 'All notifications.');
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'notifications Not found', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'notifications Not found', 'errors' => $th->getMessage()],401);
         }
     }
 

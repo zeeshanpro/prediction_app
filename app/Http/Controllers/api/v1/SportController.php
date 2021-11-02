@@ -27,7 +27,7 @@ class SportController extends BaseController
 			return $this->sendResponse($data, 'All sports.');
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Sports Not found', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Sports Not found', 'errors' => $th->getMessage()],401);
         }
     }
 
@@ -54,7 +54,7 @@ class SportController extends BaseController
 			return $this->sendResponse($sports, 'New sports created.');
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Something went wrong.', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Something went wrong.', 'errors' => $th->getMessage()],401);
         }
     }
 
@@ -75,7 +75,7 @@ class SportController extends BaseController
 			return $this->sendResponse($sucess, 'Sports found successfully.');
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Sport Not found', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Sport Not found', 'errors' => $th->getMessage()],401);
         }
     }
 

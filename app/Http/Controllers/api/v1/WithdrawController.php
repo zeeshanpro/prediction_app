@@ -111,7 +111,7 @@ class WithdrawController extends BaseController
 			}
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'something went wrong.', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'something went wrong.', 'errors' => $th->getMessage()],401);
         }
     }
 	
@@ -126,7 +126,7 @@ class WithdrawController extends BaseController
 			return $this->sendResponse($data, 'Data found successfully.');
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Data Not found', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Data Not found', 'errors' => $th->getMessage()],401);
         }
     }
 	

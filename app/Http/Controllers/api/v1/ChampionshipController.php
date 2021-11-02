@@ -27,7 +27,7 @@ class ChampionshipController extends BaseController
 			return $this->sendResponse($data, 'All championships.');
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Championships Not found', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Championships Not found', 'errors' => $th->getMessage()],401);
         }
     }
 
@@ -55,7 +55,7 @@ class ChampionshipController extends BaseController
 			return $this->sendResponse($championship, 'New championship created.');
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Something went wrong.', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Something went wrong.', 'errors' => $th->getMessage()],401);
         }
     }
 
@@ -74,7 +74,7 @@ class ChampionshipController extends BaseController
 			return $this->sendResponse($data, 'Championship found successfully.');
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Championship Not found', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Championship Not found', 'errors' => $th->getMessage()],401);
         }
     }
 
@@ -121,7 +121,7 @@ class ChampionshipController extends BaseController
 			return $this->sendResponse($data, 'Championships found successfully.');
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Championship Not found.', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Championship Not found.', 'errors' => $th->getMessage()],401);
         }
 		
     }

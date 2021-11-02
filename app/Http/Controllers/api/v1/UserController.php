@@ -134,7 +134,7 @@ class UserController extends BaseController
 			return $this->sendResponse($data, 'User found successfully.');
 		}
         catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'User Not found.', 'errors' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'User Not found.', 'errors' => $th->getMessage()],401);
         }
 		
     }

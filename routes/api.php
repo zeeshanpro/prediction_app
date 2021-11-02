@@ -12,6 +12,7 @@ use App\Http\Controllers\api\v1\UserController;
 use App\Http\Controllers\api\v1\PaymentMethodController;
 use App\Http\Controllers\api\v1\WithdrawController;
 use App\Http\Controllers\api\v1\NotificationController;
+use App\Http\Controllers\api\v1\ContactUsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,7 @@ Route::post('login', [RegisterController::class, 'login']);
 Route::resource('sports', SportController::class);
 Route::resource('championships', ChampionshipController::class);
 Route::resource('games', GameController::class);
+Route::resource('contact_us', ContactUsController::class);
 
 Route::get('getChampionshipsBySportID/{sport_id}', [ChampionshipController::class,'getChampionshipsBySportID'])->name('getChampionshipsBySportID');
 Route::get('getGamesByChampionshipID/{championship_id}', [GameController::class,'getGamesByChampionshipID'])->name('getGamesByChampionshipID');

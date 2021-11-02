@@ -423,6 +423,14 @@
             </li>
           </ul>
         </li> 
+		<li class="nav-item {{ Request::segment(2) == 'contact_us' ? 'activeLi' : '' }}">
+			  <a href="{{ route('contact_us.index') }}" class="nav-link">
+			<i class="nav-icon fas fa-basketball-ball"></i>
+			<p>
+			  Contact Us
+			</p>
+		  </a>
+		</li>
       </ul>
     </nav>
     <!-- /.sidebar-menu -->

@@ -46,6 +46,26 @@
 			<div class="row">
 				<div class="col-4">
 					<div class="form-group">
+						<label for="name">User Status</label>
+						<input class="form-control" type="text" value="{{ $user->is_status == 1 ? 'Active' : 'Block' }}" disabled />
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="form-group">
+						<label for="name">User Type</label>
+						<input class="form-control" type="text" value="{{ $user->is_premium == 1 ? 'Premium' : 'Non Premium' }}" disabled />
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="form-group">
+						<label for="name">Membership Expiry Date</label>
+						<input class="form-control" type="text" value="{{ !empty($user->expiry_date) ? date('Y-m-d h:i:s A',strtotime($user->expiry_date)) : '-' }}" disabled />
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-4">
+					<div class="form-group">
 						<label for="name">Total Played Games</label>
 						<input class="form-control" type="text" value="{{ $playedGames }}" disabled />
 					</div>

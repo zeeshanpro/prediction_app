@@ -123,6 +123,26 @@
 					</div>
 				</div>
 			</div>
+			<div class="row">
+				<div class="col-4">
+					<div class="form-group">
+						<label for="name">Total Transactions </label>
+						<input class="form-control" type="text" value="{{ $totalTransactions }}" disabled />
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="form-group">
+						<label for="name">Open Transactions</label>
+						<input class="form-control" type="text" value="{{ $openTransactions }}" disabled />
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="form-group">
+						<label for="name">Complete Transactions</label>
+						<input class="form-control" type="text" value="{{ $completeTransactions }}" disabled />
+					</div>
+				</div>
+			</div>
           </div>
           <!-- /.card-body -->
         </div>

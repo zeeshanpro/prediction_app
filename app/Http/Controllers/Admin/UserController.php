@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Game;
 use App\Models\Prediction;
+use App\Models\Withdraw;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -131,17 +132,23 @@ class UserController extends Controller
 			if(!empty($completePrediction))
 				$winRate = round(( $winPrediction / $completePrediction) * 100,2)."%";
 			
+			$totalTransactions 		= Withdraw::where(['user_id' => $user->id])->count();					
+			$completeTransactions 	= Withdraw::where(['user_id' => $user->id,'is_status' => 1])->count();
+			$openTransactions 		= $totalTransactions - $completeTransactions;
 			
-			$data['user'] 				= $user;
-			$data['totalPrediction'] 	= $totalPrediction;
-			$data['completePrediction'] = $completePrediction;
-			$data['winPrediction'] 		= $winPrediction;
-			$data['losePrediction'] 	= $losePrediction;
-			$data['pendingPrediction'] 	= $pendingPrediction;
-			$data['winRate'] 			= $winRate;
-			$data['playedGames'] 		= $playedGames;
-			$data['completeGames'] 		= $completeGames;
-			$data['pendingGames'] 		= $pendingGames;
+			$data['user'] 					= $user;
+			$data['totalPrediction'] 		= $totalPrediction;
+			$data['completePrediction'] 	= $completePrediction;
+			$data['winPrediction'] 			= $winPrediction;
+			$data['losePrediction'] 		= $losePrediction;
+			$data['pendingPrediction'] 		= $pendingPrediction;
+			$data['winRate'] 				= $winRate;
+			$data['playedGames'] 			= $playedGames;
+			$data['completeGames'] 			= $completeGames;
+			$data['pendingGames'] 			= $pendingGames;
+			$data['totalTransactions'] 		= $totalTransactions;
+			$data['completeTransactions'] 	= $completeTransactions;
+			$data['openTransactions'] 		= $openTransactions;
 			
 			return view('admin.users.show',$data);
 		}

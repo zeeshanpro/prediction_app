@@ -431,6 +431,14 @@
 			</p>
 		  </a>
 		</li>
+		<li class="nav-item {{ Request::segment(2) == 'packages' ? 'activeLi' : '' }}">
+			  <a href="{{ route('packages.index') }}" class="nav-link">
+			<i class="nav-icon fas fa-basketball-ball"></i>
+			<p>
+			  Packages
+			</p>
+		  </a>
+		</li>
       </ul>
     </nav>
     <!-- /.sidebar-menu -->
@@ -540,9 +548,33 @@ $(document).ready(function(){
 			event.preventDefault();
 		}
 	});
+	
+	CheckUserExpiryDate();
 });
 			
+function CheckUserExpiryDate()
+{	
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': "{{ csrf_token() }}"
+		}
+	});
+	
+	var type = "get";
+	var ajaxurl = '/admin/users/CheckUserExpiryDate';
+	$.ajax({
+		type: type,
+		url: ajaxurl,
+		dataType: 'json',
+		success: function (data) {
 			
+		},
+		error: function (data) {
+			console.log(data);
+		}
+	});	
+}
+	
 </script>
 
 @stack('scripts')

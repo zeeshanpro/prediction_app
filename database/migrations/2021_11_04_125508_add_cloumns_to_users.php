@@ -16,6 +16,8 @@ class AddCloumnsToUsers extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->tinyInteger('is_premium')->default('0')->after('is_status');
 			$table->dateTime('expiry_date')->nullable()->after('is_premium');
+			$table->biginteger('package_id')->unsigned()->index()->nullable()->after('expiry_date');
+            $table->foreign('package_id')->references('id')->on('packages');
         });
     }
 

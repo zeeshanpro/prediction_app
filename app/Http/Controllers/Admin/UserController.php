@@ -147,4 +147,10 @@ class UserController extends Controller
 		}
     }
 	
+	public function CheckUserExpiryDate()
+	{
+		$today 	= date("Y-m-d H:i:s");
+		User::where("expiry_date" ,"<=" ,$today)->update(['is_premium' => 0 ]);
+		return response()->json(array('status' => true , 'message'=> "Successfully"), 200);
+	}
 }

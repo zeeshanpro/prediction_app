@@ -44,10 +44,12 @@ Route::group( ['prefix' => 'admin','middleware' => ['auth'] ] , function (){
 	Route::resource('withdraws',App\Http\Controllers\Admin\WithdrawController::class);
 	Route::resource('notifications',App\Http\Controllers\Admin\NotificationController::class);
 	Route::resource('contact_us',App\Http\Controllers\Admin\ContactUsController::class);
+	Route::resource('packages',App\Http\Controllers\Admin\PackageController::class);
 	Route::post('championships/getChampionshipBySportID',[App\Http\Controllers\Admin\ChampionshipController::class,'LoadChampionshipListBySportID'])->name('getChampionshipBySportID');
 	Route::post('games/removeQuestionById',[App\Http\Controllers\Admin\GameController::class,'removeQuestionById'])->name('removeQuestionById');
 	Route::post('games/removeAnswerById',[App\Http\Controllers\Admin\GameController::class,'removeAnswerById'])->name('removeAnswerById');
 	Route::post('games/allocateRewardByGameID',[App\Http\Controllers\Admin\GameController::class,'allocateRewardByGameID'])->name('allocateRewardByGameID');
+	Route::get('users/CheckUserExpiryDate',[App\Http\Controllers\Admin\UserController::class,'CheckUserExpiryDate'])->name('CheckUserExpiryDate');
 });
 
 

@@ -13,6 +13,7 @@ use App\Http\Controllers\api\v1\PaymentMethodController;
 use App\Http\Controllers\api\v1\WithdrawController;
 use App\Http\Controllers\api\v1\NotificationController;
 use App\Http\Controllers\api\v1\ContactUsController;
+use App\Http\Controllers\api\v1\PackageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,7 @@ Route::resource('sports', SportController::class);
 Route::resource('championships', ChampionshipController::class);
 Route::resource('games', GameController::class);
 Route::resource('contact_us', ContactUsController::class);
+//Route::resource('packages',PackageController::class);
 
 Route::get('getChampionshipsBySportID/{sport_id}', [ChampionshipController::class,'getChampionshipsBySportID'])->name('getChampionshipsBySportID');
 Route::get('getGamesByChampionshipID/{championship_id}', [GameController::class,'getGamesByChampionshipID'])->name('getGamesByChampionshipID');
@@ -45,6 +47,8 @@ Route::get('withdrawHistory/{user_id}', [WithdrawController::class,'withdrawHist
 
 Route::get('getNotifications', [NotificationController::class,'index'])->name('getNotifications');
 
+Route::get('packages', [PackageController::class,'index'])->name('packages');
+Route::post('buyPackage', [PackageController::class,'buyPackage'])->name('buyPackage');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

@@ -114,10 +114,11 @@ class UserController extends BaseController
 				if(!empty($completePrediction))
 					$winRate = round(( $winPrediction / $completePrediction) * 100,2)."%";
 				
-				
 				$userArray['id'] 			= $user->id;
 				$userArray['name'] 			= $user->name;
 				$userArray['email'] 		= $user->email;
+				$userArray['is_premium'] 	= $user->is_premium;
+				$userArray['expiry_date'] 	= $user->expiry_date;
 				
 				$data['user'] 				= $userArray;
 				$data['totalPrediction'] 	= $totalPrediction;
